@@ -389,6 +389,7 @@ class UserWarningDao
      * @author jilin
      * @param $id int ID
      * @param $column string 字段名
+     * @param $amount int 数量
      * @return mixed
      * @throws JsonException
      */
