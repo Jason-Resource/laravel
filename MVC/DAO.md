@@ -383,6 +383,34 @@ class UserWarningDao
         return $collection;
     }
 
-    
+    /**
+     * 字段值递增
+     *
+     * @author jilin
+     * @param $id int ID
+     * @param $column string 字段名
+     * @return mixed
+     * @throws JsonException
+     */
+    public function increment($id, $column, $amount = 1)
+    {
+        // 验证数据
+        $rule = array(
+            'id' => ['required', 'integer', 'min:1'],
+            'column' => ['required', 'string', 'min:1'],
+        );
+        $condition = [
+            'id' => $id,
+            'column' => $column,
+        ];
+        $validator = app('validator')->make($condition, $rule);
+        if ($validator->fails()) {
+            throw new JsonException(10000, $validator->messages());
+        }
+
+        $model = $this->detail(['id'=>$id]);
+
+        return $model->increment($column, $amount);
+    }
 }
 ```
