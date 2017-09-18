@@ -18,11 +18,15 @@ class UserWarningDao
      */
     public function store(array $data = [])
     {
+        //code 类型
+        $allow_type_arr = array_column(config('stock.choice_type'), 'code');
+        $allow_type_str = implode(',', $allow_type_arr);
+        
         // 验证数据
         $rule = [
             'user_id' => ['required', 'numeric', 'min:1'],
             'code' => ['required', 'string', 'min:1'],
-            'type' => ['required', 'numeric', 'min:0'],
+            'type' => ['required', 'numeric', 'in:'.$allow_type_str],
             'buy_one' => ['numeric', 'min:0'],
             'sell_one' => ['numeric', 'min:0'],
         ];
