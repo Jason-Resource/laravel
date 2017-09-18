@@ -124,22 +124,35 @@ class UserWarning extends Model
     {
         return $query->whereIn('id', '!=', $id);
     }
+    
+    /**
+     * 标题 模糊查询
+     *
+     * @author jilin
+     */
+    public function scopeFuzzyTitleQuery($query, $keywords)
+    {
+        return $query->where('title', 'like', "%$keywords%");
+    }
 
     /**
-     * 包含平台ID 查询
+     * 包含代码 查询
      *
-     * @author  jilin
+     * @author jilin
      */
-    public function scopePlatformIncludeQuery($query, array $arr)
+    public function scopeCodeIncludeQuery($query,$arr)
     {
-        $query->whereHas('ArticlePlatformRelation',function($query) use($arr){
-            $query->whereIn('platform_id',$arr);
+        $query->whereHas('relationAssembleChoice',function($query) use($arr){
+            $query->whereIn('code',$arr);
         });
         return $query;
     }
 
-    /***************************************常用查询条件**************************/
-
+    /***************************************关联模型**************************/
+    public function relationAssembleChoice()
+    {
+        return $this->hasMany(AssembleChoice::class, 'assemble_id', 'id');
+    }
 
 }
 
