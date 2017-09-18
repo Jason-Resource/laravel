@@ -9,12 +9,7 @@ class UserWarning extends Model
     //使用软删除
     use SoftDeletes;
     
-    /**
-     * 链接数据库
-     *
-     * @var string
-     * @notic \config\database.php -> connections
-     */
+    //链接数据库 \config\database.php -> connections
     protected $connection = 'mysql';
     
     /**
