@@ -35,20 +35,21 @@ class UserWarningDao
             throw new JsonException(10000, $validator->messages());
         }
 
+        // 模型
         $model = app($this->model_name);
-        $model->user_id = $data['user_id'];
-        $model->code = $data['code'];
-        $model->type = $data['type'];
-        if (isset($data['sell_one'])) {
-            $model->sell_one = $data['sell_one'];
+        // 赋值
+        $allow_key = array_keys($rule);
+        foreach ($condition as $key=>$value) {
+            if (in_array($key, $allow_key)) {
+                $model->$key = $value;
+            }
         }
-        if (isset($data['buy_one'])) {
-            $model->buy_one = $data['buy_one'];
-        }
-        $model->addtime = Helper::getNow();
-        $model->last_update_time = Helper::getNow();
+        $model->addtime = Helper::getNow(true);
+        $model->last_update_time = Helper::getNow(true);
 
         $response = $model->save();
+        
+        // 添加失败
         if (true !== $response) {
             throw new JsonException(60010);
         }
@@ -101,9 +102,9 @@ class UserWarningDao
     {
         // 验证数据
         $rule = [
-            'shares' => ['sometimes', 'numeric', 'min:0'],
-            'cost_price' => ['sometimes', 'string', 'min:0'],
-            'sort' => ['sometimes', 'numeric', 'min:1'],
+            'shares' => ['numeric', 'min:0'],
+            'cost_price' => ['string', 'min:0'],
+            'sort' => ['numeric', 'min:1'],
         ];
         if (is_null($assemble_choice)) {
             $rule['id'] = ['required', 'numeric', 'min:1'];
@@ -117,22 +118,17 @@ class UserWarningDao
         $model = !is_null($assemble_choice) ? $assemble_choice : $this->detail(['id'=>$condition['id']]);
 
         // 构造要修改的字段
-        if (isset($condition['shares'])) {
-            $model->shares = $condition['shares'];
-        }
-        if (isset($condition['cost_price'])) {
-            $model->cost_price = $condition['cost_price'];
-        }
-        if (isset($condition['sort'])) {
-            $model->sort = $condition['sort'];
-        }
-        if (isset($condition['update_cost_time'])) {
-            $model->update_cost_time = $condition['update_cost_time'];
+        $allow_key = array_keys(array_except($rule,'id'));
+        foreach ($condition as $key=>$value) {
+            if (in_array($key, $allow_key)) {
+                $model->$key = $value;
+            }
         }
         $model->last_update_time = Helper::getNow(true);
 
         $response = $model->save();
-
+        
+        // 修改失败
         if (true !== $response) {
             throw new JsonException(110202);
         }
