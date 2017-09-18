@@ -74,6 +74,56 @@ class UserWarning extends Model
     {
         return $query->whereNotIn('id', $arr);
     }
+    
+    /**
+     * 小于ID 查询
+     *
+     * @author jilin
+     */
+    public function scopeLtIdQuery($query, $id)
+    {
+        return $query->whereIn('id', '<', $id);
+    }
+
+    /**
+     * 小于等于ID 查询
+     *
+     * @author jilin
+     */
+    public function scopeLteIdQuery($query, $id)
+    {
+        return $query->whereIn('id', '<=', $id);
+    }
+
+    /**
+     * 大于ID 查询
+     *
+     * @author jilin
+     */
+    public function scopeGtIdQuery($query, $id)
+    {
+        return $query->whereIn('id', '>', $id);
+    }
+
+    /**
+     * 大于等于ID 查询
+     *
+     * @author jilin
+     */
+    public function scopeGteIdQuery($query, $id)
+    {
+        return $query->whereIn('id', '>=', $id);
+    }
+
+    /**
+     * 不等于ID 查询
+     *
+     * @author jilin
+     */
+    public function scopeNeIdQuery($query, $id)
+    {
+        return $query->whereIn('id', '!=', $id);
+    }
 
     /**
      * 包含平台ID 查询
