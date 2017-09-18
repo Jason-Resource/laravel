@@ -154,6 +154,32 @@ class UserWarning extends Model
         return $this->hasMany(AssembleChoice::class, 'assemble_id', 'id');
     }
 
+    /***************************************访问器**************************/
+    /**
+     * 获取用户名字
+     *
+     * @param $value
+     * @return string
+     * @example $model->first_name
+     */
+    public function getFirstNameAttribute($value)
+    {
+        // 首字母大写
+        return ucfirst($value);
+    }
+
+    /***************************************修改器**************************/
+    /**
+     * 设定用户的名字。
+     *
+     * @param  string  $value
+     * @return void
+     * @example $model->first_name = 'meinvbingyue';
+     */
+    public function setFirstNameAttribute($value)
+    {
+        $this->attributes['first_name'] = strtolower($value);
+    }
 }
 
 ```
