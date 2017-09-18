@@ -7,29 +7,31 @@ use App\Http\Common\Helper;
 
 class UserWarningDao
 {
+    // 模型名称
+    private $model_name = 'UserWarningModel';
+    
     /**
-     * 添加用户预警
+     * 添加
      *
      * @author jilin
      * @param array $data
-     * @return 用户预警模型
      */
-    public function storeUserWarning(array $data = [])
+    public function store(array $data = [])
     {
         // 验证数据
         $rule = [
             'user_id' => ['required', 'numeric', 'min:1'],
             'code' => ['required', 'string', 'min:1'],
             'type' => ['required', 'numeric', 'min:0'],
-            'buy_one' => ['sometimes', 'numeric', 'min:0'],
-            'sell_one' => ['sometimes', 'numeric', 'min:0'],
+            'buy_one' => ['numeric', 'min:0'],
+            'sell_one' => ['numeric', 'min:0'],
         ];
-        $validator = validator($data, $rule);
+        $validator = app('validator')->make($condition, $rule);
         if ($validator->fails()) {
             throw new JsonException(10000, $validator->messages());
         }
 
-        $model = app('UserWarningModel');
+        $model = app($this->model_name);
         $model->user_id = $data['user_id'];
         $model->code = $data['code'];
         $model->type = $data['type'];
@@ -43,7 +45,7 @@ class UserWarningDao
         $model->last_update_time = Helper::getNow();
 
         $response = $model->save();
-        if (!$response) {
+        if (true !== $response) {
             throw new JsonException(60010);
         }
 
