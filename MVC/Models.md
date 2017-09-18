@@ -125,7 +125,15 @@ class UserWarning extends Model
         return $query->whereIn('id', '!=', $id);
     }
     
-    
+    /**
+     * 标题 模糊查询
+     *
+     * @author jilin
+     */
+    public function scopeFuzzyTitleQuery($query, $keywords)
+    {
+        return $query->where('title', 'like', "%$keywords%");
+    }
 
     /**
      * 包含代码 查询
