@@ -82,10 +82,10 @@ class UserWarning extends Model
      */
     public function scopePlatformIncludeQuery($query, array $arr)
     {
-      $query->whereHas('ArticlePlatformRelation',function($query) use($arr){
-          $query->whereIn('platform_id',$arr);
-      });
-      return $query;
+        $query->whereHas('ArticlePlatformRelation',function($query) use($arr){
+            $query->whereIn('platform_id',$arr);
+        });
+        return $query;
     }
 
     /***************************************常用查询条件**************************/
