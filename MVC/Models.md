@@ -10,7 +10,7 @@ class UserWarning extends Model
     use SoftDeletes;
     
     /**
-     * 链接数据库
+     *链接数据库
      *
      * @var string
      * @notic \config\database.php -> connections
