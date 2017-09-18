@@ -212,7 +212,7 @@ class UserWarningDao
      * @param array $data
      * @return int $affected 影响行数
      */
-    public function destroyBatch(array $data = [])
+    public function batchDestroy(array $data = [])
     {
         // 验证数据
         $rule = [
@@ -246,7 +246,142 @@ class UserWarningDao
         return $affected;
     }
     
+    /**
+     * 详情
+     * 
+     * @author jilin
+     * @param array $condition 条件
+     * @param array $columns 字段
+     * @param array $relation 关联关系
+     */
+    public function detail(array $condition = [], array $columns = ['*'], array $relation = [])
+    {
+        $condition['first'] = 'true';
+        $list = $this->getData($condition, $columns, $relation);
+        return $list;
+    }
     
+    /**
+     * 全部数据
+     * @author jilin
+     * @param array $condition 条件
+     * @param array $columns 字段
+     * @param array $relation 关联关系
+     */
+    public function allData(array $condition = [], array $columns = ['*'], array $relation = [])
+    {
+        $condition['all'] = 'true';
+        $list = $this->getData($condition, $columns, $relation);
+        return $list;
+    }
+    
+    /**
+     * 获取数据
+     *
+     * @author  jilin
+     * @param $condition    array   查询条件
+     *         $condition['first'] = 'true'             单个数据
+     *         $condition['sort'] = ['id'=>'desc']      排序
+     *         $condition['sort'] = 'rand'
+     *         $condition['group'] = 'id,name'          分组
+     *         $condition['limit'] = 10
+     *         $condition['offset'] = 100
+     *         $condition['all'] = 'true'
+     *         $condition['total'] = 'true'
+     * @param $columns      array   查询字段
+     * @param $relation     array   关联关系
+     * @return $collection
+     */
+    public function getData(array $condition = [], array $columns = ['*'], array $relation = []) {
+
+        // 验证数据
+        $rule = array(
+            'page_size' => ['integer', 'min:1'],
+            'id' => ['integer', 'min:1'],
+            'id_include' => ['array', 'min:1'],
+        );
+        $validator = app('validator')->make($condition, $rule);
+        if ($validator->fails()) {
+            throw new JsonException(10000, $validator->messages());
+        }
+
+        $model = app($this->model_name);
+        $builder = $model->select($columns);
+
+        // ID查询
+        if (isset($condition['id'])) {
+            $builder->IdQuery($condition['id']);
+        }
+        // 包含ID查询
+        if (isset($condition['id_include'])) {
+            $builder->IdIncludeQuery($condition['id_include']);
+        }
+
+        // 每页个数
+        $page_size = isset($condition['page_size']) && is_numeric($condition['page_size']) && $condition['page_size'] > 0
+            ? abs($condition['page_size'])
+            : config('site.page_size.default');
+
+        // 排序
+        if (isset($condition['sort']) && $condition['sort'] == 'rand') {
+
+            $builder->orderBy(app('db')->raw('RAND()'));
+        } else {
+
+            // 默认排序
+            if (!isset($condition['sort'])) {
+                $condition['sort'] = [
+                    'addtime' => 'desc',
+                    'id' => 'desc',
+                ];
+            }
+
+            foreach ($condition['sort'] as $column => $rule) {
+                $builder->orderBy($column, $rule);
+            }
+
+        }
+
+        // 分组
+        if (isset($condition['group'])) {
+            $builder->groupBy($condition['group']);
+        }
+
+        // 调试
+//        echo $builder->toSql();var_dump($condition);exit;
+
+        // 获取数据
+        if (isset($condition['limit']) && is_numeric($condition['limit']) && $condition['limit'] > 0) {
+
+            if (isset($data['offset'])) {
+                $builder->skip((int)$condition['offset']);
+            }
+            $collection = $builder->take($condition['limit'])->get();
+
+        } elseif (isset($condition['first']) && $condition['first'] == 'true') {
+
+            $collection = $builder->first();
+
+        } elseif (isset($condition['all']) && $condition['all'] == 'true') {
+
+            $collection = $builder->get();
+
+        } else if (isset($condition['total']) && $condition['total'] == 'true') {
+
+            $collection = $builder->count('id');
+
+        } else {
+
+            $collection = $builder->paginate($page_size);
+        }
+
+        // 加载关系
+        if (!empty($relation) && !empty($collection)) {
+            $collection->load($relation);
+        }
+
+        return $collection;
+    }
 
     
 }
