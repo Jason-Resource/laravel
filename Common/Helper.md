@@ -4,6 +4,24 @@ namespace App\Http\Common;
 
 class Helper
 {
+    /**
+     * 获取当前时间
+     * @author  jianwei
+     * @param   $flag   double  当$flag 为 true 时,等同于 time()
+     */
+    public static function getNow($flag = false)
+    {
+        static $now_time = null;
+        if(null === $now_time){
+            $now_time = date('YmdHis',time());
+        }
+        
+        if(true === $flag){
+            return date('YmdHis',time());
+        }
+        
+        return $now_time;
+    }
     
     /**
      * 检查某个数组中是否有重复数据
