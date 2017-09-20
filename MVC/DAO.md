@@ -1,66 +1,62 @@
 ```php
+<?php
 
 namespace App\Http\Business\Dao;
 
 use App\Exceptions\JsonException;
 use App\Http\Common\Helper;
+use App\Model\Test as Model;
+use Illuminate\Database\QueryException;
 
-class UserWarningDao
+class TestDao
 {
     // 模型名称
-    private $model_name = 'UserWarningModel';
-    
+    private $model_name = 'TestModel';
+
     /**
      * 添加
      *
-     * @author jilin
      * @param array $data
+     * @return $model
      */
     public function store(array $data = [])
     {
-        //code 类型
-        $allow_type_arr = array_column(config('stock.choice_type'), 'code');
-        $allow_type_str = implode(',', $allow_type_arr);
-        
         // 验证数据
         $rule = [
-            'user_id' => ['required', 'numeric', 'min:1'],
-            'code' => ['required', 'string', 'min:1'],
-            'type' => ['required', 'numeric', 'in:'.$allow_type_str],
-            'buy_one' => ['numeric', 'min:0'],
-            'sell_one' => ['numeric', 'min:0'],
+            'first_name' => ['required', 'string', 'min:1'],
+            'age' => ['required', 'numeric', 'min:10'],
         ];
-        $validator = app('validator')->make($condition, $rule);
-        if ($validator->fails()) {
-            throw new JsonException(10000, $validator->messages());
-        }
+        Helper::validateParam($rule, $data);
 
-        // 模型
-        $model = app($this->model_name);
+        // 获取模型
+        $model = $this->getModel();
+
         // 赋值
         $allow_key = array_keys($rule);
-        foreach ($condition as $key=>$value) {
+        foreach ($data as $key=>$value) {
             if (in_array($key, $allow_key)) {
                 $model->$key = $value;
             }
         }
-        $model->addtime = Helper::getNow(true);
-        $model->last_update_time = Helper::getNow(true);
+        $cur_time = Helper::getNow(true);
+        $model->addtime = $cur_time;
+        $model->last_update_time = $cur_time;
 
+        // 执行保存
         $response = $model->save();
-        
+
         // 添加失败
         if (true !== $response) {
-            throw new JsonException(60010);
+            throw new JsonException(88888);
         }
 
         return $model;
     }
-    
+
     /**
      * 批量添加
      *
-     * @author jilin
+     * @param array $data
      * @return boolean
      */
     public function batchStore(array $data = [])
@@ -69,23 +65,37 @@ class UserWarningDao
             throw new JsonException(10000);
         }
 
-        // 验证数据
-        foreach ($data as $condition) {
+        $insert_data = [];
+        foreach ($data as $key=>$item) {
+            // 验证数据
             $rule = [
-                'user_id' => ['required', 'numeric', 'min:1'],
-                'assemble_id' => ['required', 'numeric', 'min:1'],
+                'first_name' => ['required', 'string', 'min:1'],
+                'age' => ['required', 'numeric', 'min:10'],
             ];
-            $validator = app('validator')->make($condition, $rule);
-            if ($validator->fails()) {
-                throw new JsonException(10000, $validator->messages());
+            Helper::validateParam($rule, $item);
+
+            $cur_time = Helper::getNow(true);
+            $cur_format_time = Helper::getFormatTime();
+
+            // 赋值
+            $allow_key = array_keys($rule);
+            foreach ($item as $k=>$v) {
+                if (in_array($k, $allow_key)) {
+                    $insert_data[$key][$k] = $v;
+                }
             }
+            $insert_data[$key]['addtime'] = $cur_time;
+            $insert_data[$key]['last_update_time'] = $cur_time;
+            $insert_data[$key]['created_at'] = $cur_format_time;
+            $insert_data[$key]['updated_at'] = $cur_format_time;
         }
 
         // 执行添加
-        $model = app($this->model_name);
-        $boolean = $model->insert($data);
+        $boolean = $this->getModel()->insert($insert_data);
+
+        // 添加失败
         if (true !== $boolean) {
-            throw new JsonException(110211);
+            throw new JsonException(88888);
         }
 
         return $boolean;
@@ -94,74 +104,87 @@ class UserWarningDao
     /**
      * 修改
      *
-     * @author jilin
-     * @param array $condition
+     * @param array $data
      * @return $model
      */
-    public function update(array $condition = [], \App\Model\AssembleChoice $assemble_choice = null)
+    public function update(array $data = [], Model $model = null)
     {
         // 验证数据
         $rule = [
-            'shares' => ['numeric', 'min:0'],
-            'cost_price' => ['string', 'min:0'],
-            'sort' => ['numeric', 'min:1'],
+            'first_name' => ['string', 'min:1'],
+            'age' => ['numeric', 'min:10'],
         ];
-        if (is_null($assemble_choice)) {
+        if (is_null($model)) {
             $rule['id'] = ['required', 'numeric', 'min:1'];
         }
-        $validator = app('validator')->make($condition, $rule);
-        if ($validator->fails()) {
-            throw new JsonException(10000, $validator->messages());
-        }
+        Helper::validateParam($rule, $data);
 
-        // 获取详情
-        $model = !is_null($assemble_choice) ? $assemble_choice : $this->detail(['id'=>$condition['id']]);
+        // 获取模型
+        $model = !is_null($model) ? $model : $this->detail($data['id']);
 
         // 构造要修改的字段
         $allow_key = array_keys(array_except($rule,'id'));
-        foreach ($condition as $key=>$value) {
+        foreach ($data as $key=>$value) {
             if (in_array($key, $allow_key)) {
                 $model->$key = $value;
             }
         }
         $model->last_update_time = Helper::getNow(true);
 
+        // 执行修改
         $response = $model->save();
-        
+
         // 修改失败
         if (true !== $response) {
-            throw new JsonException(110202);
+            throw new JsonException(88888);
         }
 
         return $model;
     }
-    
+
     /**
      * 批量修改
      *
-     * @author jilin
-     * @param array $update_list
+     * @param array $data
      * @return int $affected 影响行数
      */
-    public function batchUpdate(array $update_list = [])
+    public function batchUpdate(array $data = [])
     {
-        if (empty($update_list)) {
+        if (empty($data)) {
             throw new JsonException(10000);
         }
 
-        $model = app($this->model_name);
+        $update_data = [];
+        foreach ($data as $key=>$item) {
+            // 验证数据
+            $rule = [
+                'id' => ['numeric', 'min:1'],
+                'age' => ['numeric', 'min:10'],
+            ];
+            Helper::validateParam($rule, $item);
 
-        $table = $model->getTable();
+            // 赋值
+            $allow_key = array_keys($rule);
+            foreach ($item as $k=>$v) {
+                if (in_array($k, $allow_key)) {
+                    $update_data[$key][$k] = $v;
+                }
+            }
+            $update_data[$key]['last_update_time'] = Helper::getNow(true);
+            $update_data[$key]['updated_at'] = Helper::getFormatTime();
+        }
+
+        $table = $this->getModel()->getTable();
 
         // 组装sql
-        $update_sql = Helper::updateBatch($table, $update_list);
+        $update_sql = Helper::updateBatch($table, $update_data);
 
-        // 批量更新排序
+        // 执行修改
         $db = app('db');
         try {
             $affected = $db->update($db->raw($update_sql));
-        } catch (\Exception $e) {
-            throw new JsonException(110206);
+        } catch (QueryException $e) {
+            throw new JsonException(88888);
         }
 
         return $affected;
@@ -170,36 +193,36 @@ class UserWarningDao
     /**
      * 删除
      *
-     * @author jilin
-     * @param array $condition
-     * @return $model
+     * @param $id
+     * @param Model|null $model
+     * @return Model
      */
-    public function destroy(array $condition = [], \App\Model\AssembleChoice $assemble_choice = null)
+    public function destroy($id, Model $model = null)
     {
         // 验证数据
-        if (is_null($assemble_choice)) {
+        if (is_null($model)) {
             $rule = [
                 'id' => ['required', 'numeric', 'min:1'],
             ];
-            $validator = app('validator')->make($condition, $rule);
-            if ($validator->fails()) {
-                throw new JsonException(10000, $validator->messages());
-            }
+            $data = [
+                'id' => $id,
+            ];
+            Helper::validateParam($rule, $data);
         }
 
-        // 获取详情
-        $model = !is_null($assemble_choice) ? $assemble_choice : $this->detail(['id' => $condition['id']]);
+        // 获取模型
+        $model = !is_null($model) ? $model : $this->detail($id);
 
         // 判断用户详情是否存在
-        if (empty($assemble_choice) || !isset($assemble_choice->id)) {
-            throw new JsonException(60040);
+        if (empty($model) || !isset($model->id)) {
+            throw new JsonException(88888);
         }
-        
+
         // 执行删除
         $response = $model->delete();
 
         if (true !== $response) {
-            throw new JsonException(110203);
+            throw new JsonException(88888);
         }
 
         return $model;
@@ -208,7 +231,6 @@ class UserWarningDao
     /**
      * 批量删除
      *
-     * @author jilin
      * @param array $data
      * @return int $affected 影响行数
      */
@@ -216,83 +238,115 @@ class UserWarningDao
     {
         // 验证数据
         $rule = [
-            'id_arr' => ['array', 'min:1'],
-            'assemble_id' => ['numeric', 'min:1'],
+            'id_include' => ['array', 'min:1'],
         ];
-        $validator = app('validator')->make($data, $rule);
-        if ($validator->fails()) {
-            throw new JsonException(10000, $validator->messages());
-        }
-        
-        $model = app($this->model_name);
-        $builder = $model->select(['id']);
-        
-        // 包含ID查询
-        if (isset($condition['id_arr'])) {
-            $builder->IdIncludeQuery($condition['id_arr']);
-        }
-        // 组合ID查询
-        if (isset($data['assemble_id'])) {
-            $builder->AssembleIdQuery($data['assemble_id']);
-        }
+        Helper::validateParam($rule, $data);
+
+        // 获取构造器
+        $builder = $this->getBuilder($data, ['id']);
 
         // 执行删除
         $affected = $builder->delete();
 
+        // 批量删除失败
         if (empty($affected)) {
-            throw new JsonException(110205);
+            throw new JsonException(88888);
         }
 
         return $affected;
     }
-    
+
+    /**
+     * 字段值递增/递减
+     *
+     * @param $id int ID
+     * @param $column string 字段名
+     * @param $type string 类型
+     * @param $amount int 数量
+     * @return int 影响行数
+     * @throws JsonException
+     */
+    public function recharge($id, $column, $type = 'increment', $amount = 1)
+    {
+        // 验证数据
+        $rule = array(
+            'id' => ['required', 'integer', 'min:1'],
+            'column' => ['required', 'string', 'min:1'],
+            'type' => ['required', 'string', 'in:increment,decrement'],
+        );
+        $data = [
+            'id' => $id,
+            'column' => $column,
+            'type' => $type,
+        ];
+        Helper::validateParam($rule, $data);
+
+        $model = $this->detail($id);
+
+        if ($type == 'increment') {
+            $affected = $model->increment($column, $amount);
+        } else {
+            $affected = $model->decrement($column, $amount);
+        }
+
+        return $affected;
+    }
+
     /**
      * 详情
-     * 
-     * @author jilin
-     * @param array $condition 条件
-     * @param array $columns 字段
-     * @param array $relation 关联关系
+     *
+     * @param int $id
+     * @param array $data
+     * @param array $columns
+     * @param array $relation
+     * @return $model
      */
-    public function detail(array $condition = [], array $columns = ['*'], array $relation = [])
+    public function detail($id = 0, array $data = [], array $columns = ['*'], array $relation = [])
     {
-        $condition['first'] = 'true';
-        $list = $this->getData($condition, $columns, $relation);
-        return $list;
+        if (!empty($id) && $id > 0) {
+            $data['id'] = $id;
+        }
+        $data['first'] = 'true';
+
+        $model = $this->getData($data, $columns, $relation);
+
+        return $model;
     }
-    
+
     /**
      * 全部数据
-     * @author jilin
-     * @param array $condition 条件
+
+     * @param array $data 数据
      * @param array $columns 字段
      * @param array $relation 关联关系
+     * @return $collection
      */
-    public function allData(array $condition = [], array $columns = ['*'], array $relation = [])
+    public function allData(array $data = [], array $columns = ['*'], array $relation = [])
     {
-        $condition['all'] = 'true';
-        $list = $this->getData($condition, $columns, $relation);
+        $data['all'] = 'true';
+
+        $list = $this->getData($data, $columns, $relation);
+        
         return $list;
     }
-    
+
     /**
      * 获取数据
      *
-     * @author  jilin
-     * @param $condition    array   查询条件
-     *         $condition['first'] = 'true'             单个数据
-     *         $condition['sort'] = ['id'=>'desc']      排序
-     *         $condition['sort'] = 'rand'
-     *         $condition['group'] = 'id,name'          分组
-     *         $condition['limit'] = 10
-     *         $condition['offset'] = 100
-     *         $condition['all'] = 'true'
-     *         $condition['total'] = 'true'
+     * @param $data    array   数据
+     *         $data['first'] = 'true'              单个数据
+     *         $data['sort'] = ['id'=>'desc']       排序
+     *         $data['sort'] = 'rand'               随机
+     *         $data['group'] = 'id,name'           分组
+     *         $data['limit'] = 10                  限制条数
+     *         $data['offset'] = 100                跳过条数
+     *         $data['all'] = 'true'                获取所有
+     *         $data['total'] = 'true'              统计
      * @param $columns      array   查询字段
      * @param $relation     array   关联关系
      * @return $collection
      */
-    public function getData(array $condition = [], array $columns = ['*'], array $relation = []) {
+    public function getData(array $data = [], array $columns = ['*'], array $relation = []) {
 
         // 验证数据
         $rule = array(
@@ -300,82 +354,42 @@ class UserWarningDao
             'id' => ['integer', 'min:1'],
             'id_include' => ['array', 'min:1'],
         );
-        $validator = app('validator')->make($condition, $rule);
-        if ($validator->fails()) {
-            throw new JsonException(10000, $validator->messages());
-        }
+        Helper::validateParam($rule, $data);
 
-        $model = app($this->model_name);
-        $builder = $model->select($columns);
-
-        // ID查询
-        if (isset($condition['id'])) {
-            $builder->IdQuery($condition['id']);
-        }
-        // 包含ID查询
-        if (isset($condition['id_include'])) {
-            $builder->IdIncludeQuery($condition['id_include']);
-        }
-
-        // 每页个数
-        $page_size = isset($condition['page_size']) && is_numeric($condition['page_size']) && $condition['page_size'] > 0
-            ? abs($condition['page_size'])
-            : config('site.page_size.default');
-
-        // 排序
-        if (isset($condition['sort']) && $condition['sort'] == 'rand') {
-
-            $builder->orderBy(app('db')->raw('RAND()'));
-        } else {
-
-            // 默认排序
-            if (!isset($condition['sort'])) {
-                $condition['sort'] = [
-                    'addtime' => 'desc',
-                    'id' => 'desc',
-                ];
-            }
-
-            foreach ($condition['sort'] as $column => $rule) {
-                $builder->orderBy($column, $rule);
-            }
-
-        }
-
-        // 分组
-        if (isset($condition['group'])) {
-            $builder->groupBy($condition['group']);
-        }
-
-        // 调试
-//        echo $builder->toSql();var_dump($condition);exit;
+        // 获取构造器
+        $builder = $this->getBuilder($data, $columns, $relation);
 
         // 获取数据
-        if (isset($condition['limit']) && is_numeric($condition['limit']) && $condition['limit'] > 0) {
+        if (isset($data['limit']) && is_numeric($data['limit']) && $data['limit'] > 0) {
 
             if (isset($data['offset'])) {
-                $builder->skip((int)$condition['offset']);
+                $builder->skip((int)$data['offset']);
             }
-            $collection = $builder->take($condition['limit'])->get();
+            $collection = $builder->take($data['limit'])->get();
 
-        } elseif (isset($condition['first']) && $condition['first'] == 'true') {
+        } elseif (isset($data['all']) && $data['all'] == 'true') {
+
+            $collection = $builder->all();
+
+        } elseif (isset($data['first']) && $data['first'] == 'true') {
 
             $collection = $builder->first();
 
-        } elseif (isset($condition['all']) && $condition['all'] == 'true') {
-
-            $collection = $builder->get();
-
-        } else if (isset($condition['total']) && $condition['total'] == 'true') {
+        } else if (isset($data['total']) && $data['total'] == 'true') {
 
             $collection = $builder->count('id');
 
         } else {
 
+            // 每页个数
+            $page_size = isset($data['page_size']) && is_numeric($data['page_size']) && $data['page_size'] > 0
+                ? abs($data['page_size'])
+                : config('site.page_size.default');
+
             $collection = $builder->paginate($page_size);
         }
 
-        // 加载关系
+        // 延迟加载关系
         if (!empty($relation) && !empty($collection)) {
             $collection->load($relation);
         }
@@ -384,34 +398,71 @@ class UserWarningDao
     }
 
     /**
-     * 字段值递增
+     * 获取模型
      *
-     * @author jilin
-     * @param $id int ID
-     * @param $column string 字段名
-     * @param $amount int 数量
-     * @return mixed
-     * @throws JsonException
+     * @return $model
      */
-    public function increment($id, $column, $amount = 1)
+    public function getModel()
     {
-        // 验证数据
-        $rule = array(
-            'id' => ['required', 'integer', 'min:1'],
-            'column' => ['required', 'string', 'min:1'],
-        );
-        $condition = [
-            'id' => $id,
-            'column' => $column,
-        ];
-        $validator = app('validator')->make($condition, $rule);
-        if ($validator->fails()) {
-            throw new JsonException(10000, $validator->messages());
+        return app($this->model_name);
+    }
+
+    /**
+     * 获取构造器
+     *
+     * @param array $data
+     * @param array $columns
+     * @param array $relation
+     * @return $builder
+     */
+    public function getBuilder(array $data = [], array $columns = ['*'], array $relation = [])
+    {
+        $builder = $this->getModel()->select($columns);
+
+        // ID查询
+        if (isset($data['id'])) {
+            $builder->IdQuery($data['id']);
+        }
+        // 包含ID查询
+        if (isset($data['id_include'])) {
+            $builder->IncludeIdQuery($data['id_include']);
         }
 
-        $model = $this->detail(['id'=>$id]);
+        // 排序
+        if (isset($data['sort']) && $data['sort'] == 'rand') {
 
-        return $model->increment($column, $amount);
+            $builder->orderBy(app('db')->raw('RAND()'));
+        } else {
+
+            // 默认排序
+            if (!isset($data['sort'])) {
+                $data['sort'] = [
+                    'addtime' => 'desc',
+                    'id' => 'desc',
+                ];
+            }
+
+            foreach ($data['sort'] as $column => $rule) {
+                $builder->orderBy($column, $rule);
+            }
+
+        }
+
+        // 分组
+        if (isset($data['group'])) {
+            $builder->groupBy($data['group']);
+        }
+
+        // 预加载关系
+        if (!empty($relation) && $data['with'] == 'true') {
+            $builder->with($relation);
+        }
+
+        // 调试
+//        echo $builder->toSql();var_dump($data);exit;
+
+        return $builder;
     }
+
 }
 ```
