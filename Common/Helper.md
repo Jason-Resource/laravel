@@ -131,6 +131,33 @@ class Helper
             return false;
         }
     }
+    
+    /**
+     * 验证参数
+     *
+     * @param $rule
+     * @param $data
+     * @throws JsonException
+     */
+    public static function validateParam($rule, $data)
+    {
+        $validator = app('validator')->make($data, $rule);
+        if ($validator->fails()) {
+            throw new JsonException(10000, $validator->messages());
+        }
+    }
+
+    /**
+     * 验证ID
+     *
+     * @param $id
+     */
+    public static function validateId($id)
+    {
+        $rule = ['id' => ['required', 'numeric', 'min:1']];
+        $data = ['id' => $id];
+        self::validateParam($rule, $data);
+    }
 
 }
 
