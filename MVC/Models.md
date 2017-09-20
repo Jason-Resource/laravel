@@ -1,4 +1,6 @@
 ```php
+<?php
+
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
@@ -6,34 +8,39 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /*use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
 use Jenssegers\Mongodb\Eloquent\SoftDeletes;*/
 
-class UserWarning extends Model
+class Test extends Model
 {
     //使用软删除
     use SoftDeletes;
-    
-    //链接数据库 \config\database.php -> connections
-    protected $connection = 'mysql';
-    
-    /**
-     * 在数组中想要隐藏的属性。
-     *
-     * @var array
-     */
-    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
     /**
-     * 在数组中可见的属性。
+     * 链接数据库
      *
-     * @var array
+     * @var string
+     * @notice \config\database.php -> connections
      */
-    protected $visible = ['first_name', 'last_name'];
+    protected $connection = 'mysql';
 
     /**
      * 关联到模型的数据表
      *
      * @var string
      */
-    protected $table = 'stk_user_warning';
+    protected $table = 'stk_test';
+
+    /**
+     * 在数组中可见的属性。
+     *
+     * @var array
+     */
+    protected $visible = ['id', 'first_name', 'age'];
+
+    /**
+     * 在数组中想要隐藏的属性。
+     *
+     * @var array
+     */
+    protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
     /***************************************常用查询条件**************************/
 
@@ -76,7 +83,7 @@ class UserWarning extends Model
     {
         return $query->whereNotIn('id', $arr);
     }
-    
+
     /**
      * 小于ID 查询
      *
@@ -126,19 +133,19 @@ class UserWarning extends Model
     {
         return $query->whereIn('id', '!=', $id);
     }
-    
+
     /**
-     * 标题 模糊查询
+     * 模糊查询
      *
      * @author jilin
      */
-    public function scopeFuzzyTitleQuery($query, $keywords)
+    public function scopeFuzzyNameQuery($query, $keywords)
     {
-        return $query->where('title', 'like', "%$keywords%");
+        return $query->where('first_name', 'like', "%$keywords%");
     }
 
     /**
-     * 包含代码 查询
+     * 包含查询
      *
      * @author jilin
      */
@@ -150,7 +157,7 @@ class UserWarning extends Model
         return $query;
     }
 
-    /***************************************关联模型**************************/
+    /***************************************关联模型**************************/
     public function relationAssembleChoice()
     {
         return $this->hasMany(AssembleChoice::class, 'assemble_id', 'id');
@@ -172,7 +179,7 @@ class UserWarning extends Model
 
     /***************************************修改器**************************/
     /**
-     * 设定用户的名字。
+     * 设置用户名字。
      *
      * @param  string  $value
      * @return void
