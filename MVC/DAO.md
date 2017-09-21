@@ -13,6 +13,134 @@ class TestDao
     // 模型名称
     private $model_name = 'TestModel';
 
+    // 每页个数
+    private $page_size = 15;
+
+    // id(兼容mongodb)
+    private $id = 'id';
+
+    // 错误码
+    private $err_code = [
+        // 参数错误
+        'invalid_param' => 10000,
+        // 保存失败
+        'store_fail' => 88888,
+        // 批量保存失败
+        'batch_store_fail' => 88888,
+        // 更新失败
+        'update_fail' => 88888,
+        // 批量更新失败
+        'batch_update_fail' => 88888,
+        // 详情不存在
+        'no_detail' => 88888,
+        // 删除失败
+        'destroy_fail' => 88888,
+        // 批量删除失败
+        'batch_destroy_fail' => 88888,
+    ];
+
+    public function __construct()
+    {
+        $this->page_size = config('site.page_size.default');
+    }
+
+    /**
+     * 验证数据
+     *
+     * @param $type 类型
+     * @param array $data 数据
+     * @param array $extra_rule 扩展规则
+     */
+    public function validateData($type, array $data, array $extra_rule = [])
+    {
+        switch ($type)
+        {
+            case 'store':
+                $rule = [
+                    'first_name' => ['required', 'string', 'min:1'],
+                    'age' => ['required', 'numeric', 'min:10'],
+                ];
+                break;
+            case 'batch_store':
+                $rule = [
+                    'first_name' => ['required', 'string', 'min:1'],
+                    'age' => ['required', 'numeric', 'min:10'],
+                ];
+                break;
+            case 'update':
+                $rule = [
+                    'first_name' => ['string', 'min:1'],
+                    'age' => ['numeric', 'min:10'],
+                ];
+                break;
+            case 'batch_update':
+                $rule = [
+                    $this->id => ['numeric', 'min:1'],
+                    'age' => ['numeric', 'min:10'],
+                ];
+                break;
+            case 'destroy':
+                $rule = [
+                    $this->id => ['required', 'numeric', 'min:1'],
+                ];
+                break;
+            case 'batch_destroy':
+                $rule = [
+                    'id_include' => ['array', 'min:1'],
+                ];
+                break;
+            case 'recharge':
+                $rule = array(
+                    $this->id => ['required', 'integer', 'min:1'],
+                    'column' => ['required', 'string', 'min:1'],
+                    'type' => ['required', 'string', 'in:increment,decrement'],
+                );
+                break;
+            case 'get_data':
+                $rule = array(
+                    'page_size' => ['integer', 'min:1'],
+                    $this->id => ['integer', 'min:1'],
+                    'id_include' => ['array', 'min:1'],
+                );
+                break;
+        }
+
+        if (!empty($extra_rule)) {
+            $rule = array($rule, $extra_rule);
+        }
+        Helper::validateParam($rule, $data);
+
+        return $rule;
+    }
+
+    /**
+     * 获取查询器
+     *
+     * @param $builder
+     * @param $data
+     * @return mixed
+     */
+    public function getQuery($builder, $data)
+    {
+        // ID查询
+        if (isset($data[$this->id])) {
+            $builder->IdQuery($data[$this->id]);
+        }
+        // 包含ID查询
+        if (isset($data['id_include'])) {
+            $arr_temp = is_array($data['id_include']) ? $data['id_include'] : explode(',', $data['id_include']);
+            $builder->IncludeIdQuery($arr_temp);
+        }
+        // 包含关系查询
+        if (isset($data['edu_include'])) {
+            $arr_temp = is_array($data['edu_include']) ? $data['edu_include'] : explode(',', $data['edu_include']);
+            $builder->EducationIncludeQuery($arr_temp);
+        }
+
+        return $builder;
+    }
+
+    /******************************************以下代码不用修改****************************************************/
     /**
      * 添加
      *
@@ -22,11 +150,7 @@ class TestDao
     public function store(array $data = [])
     {
         // 验证数据
-        $rule = [
-            'first_name' => ['required', 'string', 'min:1'],
-            'age' => ['required', 'numeric', 'min:10'],
-        ];
-        Helper::validateParam($rule, $data);
+        $rule = $this->validateData('store', $data);
 
         // 获取模型
         $model = $this->getModel();
@@ -47,7 +171,7 @@ class TestDao
 
         // 添加失败
         if (true !== $response) {
-            throw new JsonException(88888);
+            throw new JsonException($this->err_code['store_fail']);
         }
 
         return $model;
@@ -62,17 +186,14 @@ class TestDao
     public function batchStore(array $data = [])
     {
         if (empty($data)) {
-            throw new JsonException(10000);
+            throw new JsonException($this->err_code['invalid_param']);
         }
 
         $insert_data = [];
         foreach ($data as $key=>$item) {
+
             // 验证数据
-            $rule = [
-                'first_name' => ['required', 'string', 'min:1'],
-                'age' => ['required', 'numeric', 'min:10'],
-            ];
-            Helper::validateParam($rule, $item);
+            $rule = $this->validateData('batch_store', $item);
 
             $cur_time = Helper::getNow(true);
             $cur_format_time = Helper::getFormatTime();
@@ -95,7 +216,7 @@ class TestDao
 
         // 添加失败
         if (true !== $boolean) {
-            throw new JsonException(88888);
+            throw new JsonException($this->err_code['batch_store_fail']);
         }
 
         return $boolean;
@@ -110,20 +231,17 @@ class TestDao
     public function update(array $data = [], Model $model = null)
     {
         // 验证数据
-        $rule = [
-            'first_name' => ['string', 'min:1'],
-            'age' => ['numeric', 'min:10'],
-        ];
+        $rule = [];
         if (is_null($model)) {
-            $rule['id'] = ['required', 'numeric', 'min:1'];
+            $rule[$this->id] = ['required', 'numeric', 'min:1'];
         }
-        Helper::validateParam($rule, $data);
+        $rule = $this->validateData('update', $data, $rule);
 
         // 获取模型
-        $model = !is_null($model) ? $model : $this->detail($data['id']);
+        $model = !is_null($model) ? $model : $this->detail($data[$this->id]);
 
         // 构造要修改的字段
-        $allow_key = array_keys(array_except($rule,'id'));
+        $allow_key = array_keys(array_except($rule,$this->id));
         foreach ($data as $key=>$value) {
             if (in_array($key, $allow_key)) {
                 $model->$key = $value;
@@ -136,7 +254,7 @@ class TestDao
 
         // 修改失败
         if (true !== $response) {
-            throw new JsonException(88888);
+            throw new JsonException($this->err_code['update_fail']);
         }
 
         return $model;
@@ -151,17 +269,13 @@ class TestDao
     public function batchUpdate(array $data = [])
     {
         if (empty($data)) {
-            throw new JsonException(10000);
+            throw new JsonException($this->err_code['invalid_param']);
         }
 
         $update_data = [];
         foreach ($data as $key=>$item) {
             // 验证数据
-            $rule = [
-                'id' => ['numeric', 'min:1'],
-                'age' => ['numeric', 'min:10'],
-            ];
-            Helper::validateParam($rule, $item);
+            $rule = $this->validateData('batch_update', $data);
 
             // 赋值
             $allow_key = array_keys($rule);
@@ -184,7 +298,7 @@ class TestDao
         try {
             $affected = $db->update($db->raw($update_sql));
         } catch (QueryException $e) {
-            throw new JsonException(88888);
+            throw new JsonException($this->err_code['batch_update_fail']);
         }
 
         return $affected;
@@ -201,28 +315,25 @@ class TestDao
     {
         // 验证数据
         if (is_null($model)) {
-            $rule = [
-                'id' => ['required', 'numeric', 'min:1'],
-            ];
             $data = [
-                'id' => $id,
+                $this->id => $id,
             ];
-            Helper::validateParam($rule, $data);
+            $this->validateData('destroy', $data);
         }
 
         // 获取模型
         $model = !is_null($model) ? $model : $this->detail($id);
 
-        // 判断用户详情是否存在
+        // 判断详情是否存在
         if (empty($model) || !isset($model->id)) {
-            throw new JsonException(88888);
+            throw new JsonException($this->err_code['no_detail']);
         }
 
         // 执行删除
         $response = $model->delete();
 
         if (true !== $response) {
-            throw new JsonException(88888);
+            throw new JsonException($this->err_code['destroy_fail']);
         }
 
         return $model;
@@ -237,20 +348,17 @@ class TestDao
     public function batchDestroy(array $data = [])
     {
         // 验证数据
-        $rule = [
-            'id_include' => ['array', 'min:1'],
-        ];
-        Helper::validateParam($rule, $data);
+        $this->validateData('batch_destroy', $data);
 
         // 获取构造器
-        $builder = $this->getBuilder($data, ['id']);
+        $builder = $this->getBuilder($data, [$this->id]);
 
         // 执行删除
         $affected = $builder->delete();
 
         // 批量删除失败
         if (empty($affected)) {
-            throw new JsonException(88888);
+            throw new JsonException($this->err_code['batch_destroy_fail']);
         }
 
         return $affected;
@@ -269,17 +377,12 @@ class TestDao
     public function recharge($id, $column, $type = 'increment', $amount = 1)
     {
         // 验证数据
-        $rule = array(
-            'id' => ['required', 'integer', 'min:1'],
-            'column' => ['required', 'string', 'min:1'],
-            'type' => ['required', 'string', 'in:increment,decrement'],
-        );
         $data = [
-            'id' => $id,
+            $this->id => $id,
             'column' => $column,
             'type' => $type,
         ];
-        Helper::validateParam($rule, $data);
+        $this->validateData('recharge', $data);
 
         $model = $this->detail($id);
 
@@ -304,7 +407,7 @@ class TestDao
     public function detail($id = 0, array $data = [], array $columns = ['*'], array $relation = [])
     {
         if (!empty($id) && $id > 0) {
-            $data['id'] = $id;
+            $data[$this->id] = $id;
         }
         $data['first'] = 'true';
 
@@ -346,15 +449,10 @@ class TestDao
      * @param $relation     array   关联关系
      * @return $collection
      */
-    public function getData(array $data = [], array $columns = ['*'], array $relation = []) {
-
+    public function getData(array $data = [], array $columns = ['*'], array $relation = [])
+    {
         // 验证数据
-        $rule = array(
-            'page_size' => ['integer', 'min:1'],
-            'id' => ['integer', 'min:1'],
-            'id_include' => ['array', 'min:1'],
-        );
-        Helper::validateParam($rule, $data);
+        $this->validateData('get_data', $data);
 
         // 获取构造器
         $builder = $this->getBuilder($data, $columns, $relation);
@@ -377,14 +475,14 @@ class TestDao
 
         } else if (isset($data['total']) && $data['total'] == 'true') {
 
-            $collection = $builder->count('id');
+            $collection = $builder->count($this->id);
 
         } else {
 
             // 每页个数
             $page_size = isset($data['page_size']) && is_numeric($data['page_size']) && $data['page_size'] > 0
                 ? abs($data['page_size'])
-                : config('site.page_size.default');
+                : $this->page_size;
 
             $collection = $builder->paginate($page_size);
         }
@@ -419,14 +517,7 @@ class TestDao
     {
         $builder = $this->getModel()->select($columns);
 
-        // ID查询
-        if (isset($data['id'])) {
-            $builder->IdQuery($data['id']);
-        }
-        // 包含ID查询
-        if (isset($data['id_include'])) {
-            $builder->IncludeIdQuery($data['id_include']);
-        }
+        $builder = $this->getQuery($builder, $data);
 
         // 排序
         if (isset($data['sort']) && $data['sort'] == 'rand') {
@@ -438,7 +529,7 @@ class TestDao
             if (!isset($data['sort'])) {
                 $data['sort'] = [
                     'addtime' => 'desc',
-                    'id' => 'desc',
+                    $this->id => 'desc',
                 ];
             }
 
@@ -454,7 +545,7 @@ class TestDao
         }
 
         // 预加载关系
-        if (!empty($relation) && $data['with'] == 'true') {
+        if (!empty($relation) && isset($data['with']) && $data['with'] == 'true') {
             $builder->with($relation);
         }
 
@@ -465,5 +556,4 @@ class TestDao
     }
 
 }
-
 ```
