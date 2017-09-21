@@ -160,8 +160,8 @@ class TestController extends Controller
     }
 
     /**
-     * 获取列表
-     *
+     * 获取列表（包含关系）
+     *
      *  /get-list-by-rela
      *  /get-list-by-rela?edu_include=本科
      */
