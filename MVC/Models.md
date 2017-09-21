@@ -149,18 +149,18 @@ class Test extends Model
      *
      * @author jilin
      */
-    public function scopeCodeIncludeQuery($query,$arr)
+    public function scopeEducationIncludeQuery($query, array $arr)
     {
-        $query->whereHas('relationAssembleChoice',function($query) use($arr){
-            $query->whereIn('code',$arr);
+        $query->whereHas('relationTestR',function($query) use($arr){
+            $query->whereIn('education', $arr);
         });
         return $query;
     }
 
     /***************************************关联模型**************************/
-    public function relationAssembleChoice()
+    public function relationTestR()
     {
-        return $this->hasMany(AssembleChoice::class, 'assemble_id', 'id');
+        return $this->hasMany(TestR::class, 'tid', 'id');
     }
 
     /***************************************访问器**************************/
