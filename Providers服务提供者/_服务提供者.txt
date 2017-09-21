@@ -1,0 +1,57 @@
+A、注册服务
+
+\config\app.php
+
+'providers' => [
+	Maatwebsite\Excel\ExcelServiceProvider::class
+],
+
+
+进入 Facade类文件 查看 function getFacadeAccessor() 中 return 的访问器名称
+
+B、使用
+$excel = app('excel');   // 这里的excel就是上面查看到的名称
+
+$excel->create();
+
+*****************************************************************************
+
+A、注册服务
+
+\config\app.php
+
+'providers' => [
+	Maatwebsite\Excel\ExcelServiceProvider::class
+],
+
+B、使用
+
+先 use Maatwebsite\Excel\Facades\Excel;
+
+Excel::create();
+
+或者
+
+use Maatwebsite\Excel\Facades\Excel as PHPExcel;
+
+PHPExcel::create();
+
+
+*****************************************************************************
+A、注册服务
+
+\config\app.php
+
+'providers' => [
+	Maatwebsite\Excel\ExcelServiceProvider::class			//这一步是一直必须的
+],
+
+'aliases' => [
+        'MyExcel' => \Maatwebsite\Excel\Facades\Excel::class,
+],
+
+B、使用
+
+use MyExcel;
+
+MyExcel::create();

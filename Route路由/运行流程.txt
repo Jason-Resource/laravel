@@ -1,0 +1,11 @@
+\app\Http\Kernel.php				HTTP核心
+
+\app\Providers\RouteServiceProvider.php		路由服务提供者
+
+\app\Http\Middleware\*				中间件
+
+\routes\*					路由配置文件
+
+
+坑：
+1、注意路由配置文件中的请求类型，一定要对应起来  调试终端（浏览器/postman）--配置文件--控制器

@@ -1,0 +1,24 @@
+A、
+composer require maatwebsite/excel
+
+B、
+在 config/app.php 中 加入 providers 数组
+Maatwebsite\Excel\ExcelServiceProvider::class,
+
+C、
+在 config/app.php 中 加入 aliases 数组
+'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
+D、
+执行相关命令
+php artisan config:clear
+php artisan config:cache
+php artisan cache:clear			#看情况吧
+php artisan vendor:publish
+
+E、
+$excel = app('excel');
+或
+$excel = app()->make('excel');
+或
+$excel = App::make('excel');

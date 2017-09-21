@@ -1,0 +1,49 @@
+http://oomusou.io/laravel/laravel-service-provider/
+************************************************************************
+
+定义接口
+app/Contracts/PostRepositoryInterface.php
+
+实现接口
+app/Repositories/PostRepository.php
+app/Repositories/MyRepository.php
+
+
+
+
+
+------------------------------------------------
+服务器提供者
+
+app/Providers/RepositoryServiceProvider.php
+
+//需要哪个就bind哪个
+public function register()
+    {
+        $this->app->bind(
+            PostRepositoryInterface::class,
+            PostRepository::class
+            //MyRepository::class
+        );
+    }
+
+
+
+
+
+------------------------------------------------
+
+
+在控制器中
+public function __construct(PostRepositoryInterface $posts)
+    {
+        $this->posts = $posts;
+    }
+
+
+public function index()
+    {
+        $posts = $this->posts->getLatest3Posts();
+        $data = compact('posts');
+        return View('posts.index', $data);
+    }

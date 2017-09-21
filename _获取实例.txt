@@ -1,0 +1,22 @@
+
+//$c = new TestClass();
+$c = app()->make(TestClass::class);
+$c->hello();
+
+
+/**********************************************************************/
+## 绑定一个实例，但是没有实例化，每次你要用到的时候再去实例化，
+$this->app->bind('foo', 'Acme\Foo');
+$foo = app('foo');
+
+
+## 绑定一个单例，但是没有实例化，当有一次实例化以后，下一次就不需要实例化了，而是再次调用上一次的实例
+$this->app->singleton('greet', 'Acme\Greet');
+$greet = app('greet');
+
+
+## 绑定一个实例，已经初始化实例，每次调用都是用那个实例
+$mail = new Acme\Mail;
+$this->app->instance('mail', $mail);
+
+$newMail = app('mail');
