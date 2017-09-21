@@ -27,7 +27,7 @@ class TestController extends Controller
     /**
      * 批量添加
      *
-     * batch-store?data=[{"first_name":"jason","age":"11"},{"first_name":"meinvbingyue","age":"12"}]
+     * /batch-store?data=[{"first_name":"jason","age":"11"},{"first_name":"meinvbingyue","age":"12"}]
      */
     public function batchStore(Request $request, TestBusiness $test_business)
     {
@@ -155,6 +155,24 @@ class TestController extends Controller
         $data = $request->all();
 
         $response = $test_business->getData($data);
+
+        return $this->jsonFormat($response);
+    }
+
+    /**
+     * 获取列表
+     *
+     *  /get-list-by-rela
+     *  /get-list-by-rela?edu_include=本科
+     */
+    public function getListByRela(Request $request, TestBusiness $test_business)
+    {
+        $data = $request->all();
+
+        $rela['relationTestR'] = function ($query) {
+        };
+//        $data['with'] = 'true';
+        $response = $test_business->getData($data, ['*'], $rela);
 
         return $this->jsonFormat($response);
     }
