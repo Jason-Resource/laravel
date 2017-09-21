@@ -1,5 +1,4 @@
 ```php
-
 <?php
 
 namespace App\Http\Business;
@@ -260,10 +259,9 @@ class TestBusiness
         }
 
         $model->time = time();
-        $model->addVisible(['time']);
+        $model->addVisible(['time', 'relationTestR']);
 
         return $model;
     }
 }
-
 ```
