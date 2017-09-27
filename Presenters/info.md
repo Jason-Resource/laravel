@@ -10,4 +10,8 @@
 ### 使用：
 ```
 {{ $appPresenter->activeMenuByController('CategoryController') }}
+
+如果有输出HTML：
+{!! $menu->show() !!}
+
 ```
