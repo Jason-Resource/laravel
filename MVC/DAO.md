@@ -480,9 +480,7 @@ class TestDao
         } else {
 
             // 每页个数
-            $page_size = isset($data['page_size']) && is_numeric($data['page_size']) && $data['page_size'] > 0
-                ? abs($data['page_size'])
-                : $this->page_size;
+            $page_size = array_get($data, 'page_size', $this->page_size);
 
             $collection = $builder->paginate($page_size);
         }
