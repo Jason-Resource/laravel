@@ -5,6 +5,38 @@ namespace App\Http\Common;
 class Helper
 {
     /**
+     * 日志版本号
+     * @param $build    boolean 是否创建版本
+     * @notice:当为 true 是才生成一个新的版本，否则返回旧的版本号
+     */
+    public static function logVersion($build = false)
+    {
+        //不是话一个版本
+        static $version = null;
+        
+        if($build == true){
+            $version = self::uniqid();
+        }
+        
+        return $version;
+    }
+    
+    /**
+     * 日志的频道
+     * @param $channel  string  频道的名称
+     */
+    public static function logChannel($channel = null)
+    {
+        static $channel_name = '';
+        
+        if(!empty($channel)){
+            $channel_name = $channel;
+        }
+        
+        return $channel_name;
+    }
+    
+    /**
      * 获取当前时间
      * @author  jianwei
      * @param   $flag   double  当$flag 为 true 时,等同于 time()
