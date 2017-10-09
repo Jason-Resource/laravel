@@ -1,6 +1,8 @@
 <?php
 
 # 查看文档： https://laravel.com/api/master/Illuminate/Http/Response.html
+ 
+return response('Hello World!');
 
 response()->view('client.errors.404', [], 404);
 
