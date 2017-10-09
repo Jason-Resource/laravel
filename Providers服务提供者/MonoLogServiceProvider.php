@@ -91,14 +91,15 @@ class MonoLogServiceProvider extends ServiceProvider
         });
         
         $type = array_map('trim', explode(',', config('monolog.log_handle_type', 'file')));
-    
-        $heartbeat = config('monolog.rabbitmq.heartbeat',50);
-        $read_write_timeout = config('monolog.rabbitmq.read_write_timeout');
-        $read_write_timeout = is_numeric($read_write_timeout) && $read_write_timeout> 0 ? $read_write_timeout : ($heartbeat > 0 ? $heartbeat * 2 : 3.0);
-    
         
         // 队列
         if (in_array('amqp', $type)) {
+            
+            $heartbeat = config('monolog.rabbitmq.heartbeat',50);
+            $read_write_timeout = config('monolog.rabbitmq.read_write_timeout');
+            $read_write_timeout = is_numeric($read_write_timeout) && $read_write_timeout> 0 ? $read_write_timeout : ($heartbeat > 0 ? $heartbeat * 2 : 3.0);
+    
+            
             //加入对应的队列
             $connection = new AMQPStreamConnection(
                 config('monolog.rabbitmq.host'),
