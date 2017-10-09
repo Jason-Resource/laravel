@@ -62,6 +62,11 @@ if ($request->has('username')) {
 
 /******************* Input *******************/
 
+use Illuminate\Support\Facades\Input;
+
+Input::get();
+Input::get('name');
+
 /*用户提交信息持久化
 有时可能需要在用户的多个请求之间持久化用户提交的信息。 比如，当用户提交的信息验证失败重新返回提交信息页面时还原用户的输入。
 将用户提交的信息存入Session*/
