@@ -95,18 +95,39 @@ class MonoLogServiceProvider extends ServiceProvider
         // 队列
         if (in_array('amqp', $type)) {
             
-            $heartbeat = config('monolog.rabbitmq.heartbeat',50);
-            $read_write_timeout = config('monolog.rabbitmq.read_write_timeout');
-            $read_write_timeout = is_numeric($read_write_timeout) && $read_write_timeout> 0 ? $read_write_timeout : ($heartbeat > 0 ? $heartbeat * 2 : 3.0);
-    
-            
+            $conf_rabbitmq = config('monolog.rabbitmq');
+
+            // 主机
+            $conf_rabbitmq_host = $conf_rabbitmq['host'];
+            // 端口
+            $conf_rabbitmq_port = $conf_rabbitmq['port'];
+            // 用户名
+            $conf_rabbitmq_username = $conf_rabbitmq['username'];
+            // 密码
+            $conf_rabbitmq_password = $conf_rabbitmq['password'];
+            // 虚拟机
+            $conf_rabbitmq_vhost = isset($conf_rabbitmq['vhost']) ? $conf_rabbitmq['vhost'] : '';
+            // 交换机类型
+            $conf_rabbitmq_exchange_type = $conf_rabbitmq['log_exchange_type'];
+            // 交换机名称
+            $conf_rabbitmq_exchange_name = $conf_rabbitmq['log_exchange_name'];
+            // 队列名称
+            $conf_rabbitmq_queue_name = $conf_rabbitmq['log_queue_name'];
+            // 路由名称
+            $conf_rabbitmq_route_name = $conf_rabbitmq['log_route_name'];
+            // 心跳
+            $conf_rabbitmq_heartbeat = $conf_rabbitmq['heartbeat'];
+            // 读写超时
+            $conf_rabbitmq_read_write_timeout = isset($conf_rabbitmq['read_write_timeout']) ? $conf_rabbitmq['read_write_timeout'] : 0;
+            $read_write_timeout = is_numeric($conf_rabbitmq_read_write_timeout) && $conf_rabbitmq_read_write_timeout> 0 ? $conf_rabbitmq_read_write_timeout : ($conf_rabbitmq_heartbeat > 0 ? $conf_rabbitmq_heartbeat * 2 : 3.0);
+
             //加入对应的队列
             $connection = new AMQPStreamConnection(
-                config('monolog.rabbitmq.host'),
-                config('monolog.rabbitmq.port'),
-                config('monolog.rabbitmq.username'),
-                config('monolog.rabbitmq.password'),
-                config('monolog.rabbitmq.vhost'),
+                $conf_rabbitmq_host,
+                $conf_rabbitmq_port,
+                $conf_rabbitmq_username,
+                $conf_rabbitmq_password,
+                $conf_rabbitmq_vhost,
                 false,
                 'AMQPLAIN',
                 null,
@@ -115,46 +136,41 @@ class MonoLogServiceProvider extends ServiceProvider
                 $read_write_timeout,
                 null,
                 false,
-                $heartbeat
+                $conf_rabbitmq_heartbeat
             );
-            
-            //交换机类型
-            $log_exchange_type = config('monolog.rabbitmq.log_exchange_type');
-            //交换机名称
-            $exchange_name = config('monolog.rabbitmq.log_exchange_name');
-            //队列名称
-            $queue_name = config('monolog.rabbitmq.log_queue_name');
-            //路由名称
-            $route_name = config('monolog.rabbitmq.log_route_name');
-            
+
             //获取一个频道
             $channel = $connection->channel();
             
             //创建一个队列
             //第三个参数的意思是把队列持久化
             //第五个参数是自动删除，当没有消费者连接到该队列的时候，队列自动销毁。
-//            $channel->queue_declare($queue_name,false,true,false,false);
+//            $channel->queue_declare($conf_rabbitmq_queue_name,false,true,false,false);
             
             //创建交换机，当不存在的时候就创建，存在则不管了
             //第二个参数为交换机的类型
             //第四个参数的意思是把队列持久化
             //第五个参数的意思是自动删除，当没有队列或者其他exchange绑定到此exchange的时候，该exchange被销毁。
-            $channel->exchange_declare($exchange_name,$log_exchange_type,false,true,false);
+            $channel->exchange_declare($conf_rabbitmq_exchange_name,$conf_rabbitmq_exchange_type,false,true,false);
             
             //把队列与交换机以及路由绑定起来
-            //这个没卵用，因为AmqpHandler会自己创建路由名称，艹
-//            $channel->queue_bind($queue_name,$exchange_name,$route_name);
+            //AmqpHandler会自己创建路由名称
+//            $channel->queue_bind($conf_rabbitmq_queue_name,$conf_rabbitmq_exchange_name,$conf_rabbitmq_route_name);
             
             
-            //创建 amqphandler
-            $amqp_handler = new AmqpHandler($channel, $exchange_name, Logger::DEBUG);
+            //创建 amqp handler
+            $amqp_handler = new AmqpHandler($channel, $conf_rabbitmq_exchange_name, Logger::DEBUG);
             
             $logger->pushHandler($amqp_handler);
         }
         
         // 文件
         if (in_array('file', $type)) {
-            $logger->pushHandler(new StreamHandler(config('monolog.log_file'), Logger::DEBUG));
+            
+            //创建 file handler
+            $file_handler = new StreamHandler(config('monolog.log_file'), Logger::DEBUG);
+
+            $logger->pushHandler($file_handler);
         }
         
         return $logger;
