@@ -51,7 +51,7 @@ class MonoLogServiceProvider extends ServiceProvider
         //以域名为为channel_name
         $channel_name = Helper::logChannel();
         if(empty($channel_name)) {
-            $channel_name = Helper::logChannel();
+            $channel_name = Helper::logChannel($app['request']->getHttpHost());
         }
 
         $logger = new Logger($channel_name);
