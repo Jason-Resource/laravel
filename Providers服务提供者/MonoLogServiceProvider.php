@@ -121,7 +121,7 @@ class MonoLogServiceProvider extends ServiceProvider
             $conf_rabbitmq_read_write_timeout = isset($conf_rabbitmq['read_write_timeout']) ? $conf_rabbitmq['read_write_timeout'] : 0;
             $read_write_timeout = is_numeric($conf_rabbitmq_read_write_timeout) && $conf_rabbitmq_read_write_timeout> 0 ? $conf_rabbitmq_read_write_timeout : ($conf_rabbitmq_heartbeat > 0 ? $conf_rabbitmq_heartbeat * 2 : 3.0);
 
-            //加入对应的队列
+            // 连接
             $connection = new AMQPStreamConnection(
                 $conf_rabbitmq_host,
                 $conf_rabbitmq_port,
@@ -139,24 +139,28 @@ class MonoLogServiceProvider extends ServiceProvider
                 $conf_rabbitmq_heartbeat
             );
 
-            //获取一个频道
+            // 创建频道（会话）
             $channel = $connection->channel();
             
-            //创建一个队列
-            //第三个参数的意思是把队列持久化
-            //第五个参数是自动删除，当没有消费者连接到该队列的时候，队列自动销毁。
-//            $channel->queue_declare($conf_rabbitmq_queue_name,false,true,false,false);
-            
-            //创建交换机，当不存在的时候就创建，存在则不管了
-            //第二个参数为交换机的类型
-            //第四个参数的意思是把队列持久化
-            //第五个参数的意思是自动删除，当没有队列或者其他exchange绑定到此exchange的时候，该exchange被销毁。
+            /*
+             * 创建交换机，当不存在的时候就创建，存在则不管了
+             *
+             * 第二个参数为交换机的类型
+             * 第四个参数的意思是把队列持久化
+             * 第五个参数的意思是自动删除，当没有队列或者其他exchange绑定到此exchange的时候，该exchange被销毁。
+             */
             $channel->exchange_declare($conf_rabbitmq_exchange_name,$conf_rabbitmq_exchange_type,false,true,false);
-            
-            //把队列与交换机以及路由绑定起来
-            //AmqpHandler会自己创建路由名称
+
+            /*
+             * 创建队列
+             *
+             * 第三个参数的意思是把队列持久化
+             * 第五个参数是自动删除，当没有消费者连接到该队列的时候，队列自动销毁。
+             */
+//            $channel->queue_declare($conf_rabbitmq_queue_name,false,true,false,false);
+
+            //把队列与交换机以及路由绑定起来，AmqpHandler会自己创建路由名称
 //            $channel->queue_bind($conf_rabbitmq_queue_name,$conf_rabbitmq_exchange_name,$conf_rabbitmq_route_name);
-            
             
             //创建 amqp handler
             $amqp_handler = new AmqpHandler($channel, $conf_rabbitmq_exchange_name, Logger::DEBUG);
