@@ -190,7 +190,34 @@ class Helper
         $data = ['id' => $id];
         self::validateParam($rule, $data);
     }
+    
+    /**
+     * 获取头部COOKIE
+     * @param $url
+     * @return mixed
+     */
+    public static function getCookieHeader($url) {
+        // 初始化CURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        // 获取头部信息
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        //不验证证书下同
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        // 返回原生的（Raw）输出
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // 执行并获取返回结果
+        $content = curl_exec($ch);
+        // 关闭CURL
+        curl_close($ch);
+        // 解析HTTP数据流
+        if(empty($content)) {
+            throw new JsonException(100002);
+        }
+        list($header, $body) = explode("\r\n\r\n", $content);
 
+        return $header;
+    }
 }
 
 ```
