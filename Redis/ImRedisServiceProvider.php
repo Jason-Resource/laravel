@@ -1,4 +1,4 @@
-```php
+<?php
 
 
 namespace App\Providers;
@@ -55,4 +55,3 @@ class ImRedisServiceProvider extends ServiceProvider
         return ["ImRedis"];
     }
 }
-```
