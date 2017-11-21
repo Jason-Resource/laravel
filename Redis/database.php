@@ -22,6 +22,8 @@ return [
             'port'     => env('REDIS_PORT', 6379),
             'database' => env('REDIS_DATABASE', 1),
             'password' => env('REDIS_PASSWORD', null),
+            //不超时
+            'read_write_timeout' => '-1'
         ],
 
         'stock_redis' => [
