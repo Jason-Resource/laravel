@@ -41,7 +41,7 @@ class TestDao
 
     public function __construct()
     {
-        $this->page_size = config('site.page_size.default');
+        $this->page_size = config('site.page_size.default', 15);
     }
 
     /**
