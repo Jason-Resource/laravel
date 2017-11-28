@@ -14,6 +14,8 @@ return redirect('/admin');
 
 return redirect()->to('/admin');
 
+return Redirect::to('admin')->with('success', '登录成功！');
+
 return redirect()->guest('auth/login'); 
 
 return redirect()->route('login');
