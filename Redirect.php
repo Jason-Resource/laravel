@@ -30,4 +30,6 @@ return new RedirectResponse(url('/home')); //要引入 use Illuminate\Http\Redir
 
 return redirect()->back(); <=> return back();
 
+return back()->with('error', '账号或密码错误')->withInput();
+
 url()->previous();
