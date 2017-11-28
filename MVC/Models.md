@@ -28,6 +28,9 @@ class Test extends Model
      */
     protected $table = 'stk_test';
 
+    //指定主键
+    protected $primaryKey = 'id';
+    
     /**
      * 在数组中可见的属性。
      *
