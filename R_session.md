@@ -1,14 +1,39 @@
-<?php
+## 关于设置session值不进去的原因
+- 看\storage 目录有没有写权限
+- 检查是否在中间件中加载了
+```php
+protected $middleware = [
+    \Illuminate\Session\Middleware\StartSession::class,  // 加载在这里则所有路由都共享session
+];
+
+/**
+ * The application's route middleware groups.
+ *
+ * @var array
+ */
+protected $middlewareGroups = [
+    'web' => [
+        \Illuminate\Session\Middleware\StartSession::class,  // 加载在这里则只有web路由能获取session
+    ],
+
+    'api' => [
+        'throttle:60,1',
+        'bindings',
+    ],
+];
+```
+- 另外，调试session一定要走完全程，不能dd,exit，不然没过中间件，最后是没有设置进值的。
+
+---- 
+
+```php
+
 /*
 |--------------------------------------------------------------------------
 | 基于 \Illuminate\Session\Store.php
 |--------------------------------------------------------------------------
 |
 | 参考：https://laravel.com/docs/5.3/session
-|
-| ****关于设置session值不进去的原因，除了看\storage 目录有没有写权限外，还要检查是否在中间件中加载了：
-| \Illuminate\Session\Middleware\StartSession::class,
-| 另外，调试session一定要走完全程，不能dd,exit，不然没过中间件，最后是没有设置进值的。
 |
 */
 
@@ -128,3 +153,5 @@ request()->session()->has('users');
 Session::flash('session.store', 'Store');		// 把'session.store'数据刷到'_flash.new'，等待下一次请求使用，然后再删除
 Session::reflash();								// 把所有本次需要删除的数据全部刷到'_flash.new'中，等待下一次请求使用，然后再删除
 Session::keep(['session.store' => 'Store']);	// 把要删除的'session.store'重新激活，刷到'_flash.new'中，等待下一次使用
+
+```
