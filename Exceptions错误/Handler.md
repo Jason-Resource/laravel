@@ -1,5 +1,4 @@
-<?php
-
+```php
 namespace App\Exceptions;
 
 use Exception;
@@ -71,3 +70,5 @@ class Handler extends ExceptionHandler
         return parent::render($request, $exception);
     }
 }
+
+```
