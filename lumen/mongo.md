@@ -10,8 +10,7 @@ $app->withEloquent();   // 一定要在这之前加载
 ```
 
 ## 配置
-
-- \config\database.php
+- \config\database.php
 ```
 'mongodb' => [
     'driver'   => 'mongodb',
