@@ -1,3 +1,10 @@
+### 默认配置
+```
+\vendor\laravel\lumen-framework\config
+```
+
+---
+
 ### 加载所有配置
 - \bootstrap\app.php
   ```
