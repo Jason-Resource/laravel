@@ -14,10 +14,8 @@ $app->register(\Illuminate\Redis\RedisServiceProvider::class);
 
 ## 配置
 
+根据 \config\database.php 在 .env 增加：
 ```
-根据 \config\database.php
-
-.env 增加：
 REDIS_HOST=127.0.0.1
 REDIS_PORT=6379
 REDIS_DATABASE=0
