@@ -1,27 +1,27 @@
-A¡¢
-²é¿´°æ±¾
+Aã€
+æŸ¥çœ‹ç‰ˆæœ¬
 composer -V
 
-B¡¢
-¸üĞÂµ½×îĞÂ°æ±¾
+Bã€
+æ›´æ–°åˆ°æœ€æ–°ç‰ˆæœ¬
 composer selfupdate
 
-C¡¢
-²é¿´ÅäÖÃ
+Cã€
+æŸ¥çœ‹é…ç½®
 composer config -lg
 
-D¡¢
-Èç¹û²»ÊÇÓÃ¹úÄÚ¾µÏñ£¬ÔòÅäÖÃÒ»ÏÂ
+Dã€
+å¦‚æœä¸æ˜¯ç”¨å›½å†…é•œåƒï¼Œåˆ™é…ç½®ä¸€ä¸‹
 composer config -g repo.packagist composer https://packagist.phpcomposer.com
 
-E¡¢
-Ä¬ÈÏ°²×°£¬»á¸ù¾İ±¾µØPHP°æ±¾µÈ»·¾³£¬×Ô¶¯Ñ¡Ôñ×îĞÂÎÈ¶¨°æ±¾
+Eã€
+é»˜è®¤å®‰è£…ï¼Œä¼šæ ¹æ®æœ¬åœ°PHPç‰ˆæœ¬ç­‰ç¯å¢ƒï¼Œè‡ªåŠ¨é€‰æ‹©æœ€æ–°ç¨³å®šç‰ˆæœ¬
 composer create-project --prefer-dist laravel/laravel blog
 
-°²×°Ö¸¶¨°æ±¾
+å®‰è£…æŒ‡å®šç‰ˆæœ¬
 composer create-project --prefer-dist laravel/laravel lar52 "5.2.*"
 composer create-project --prefer-dist laravel/laravel lar53 "5.3.*"
 composer create-project --prefer-dist laravel/laravel lar54 "5.4.*"
 
-²é¿´°æ±¾
+æŸ¥çœ‹ç‰ˆæœ¬
 php artisan -V
