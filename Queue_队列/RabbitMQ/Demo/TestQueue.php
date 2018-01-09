@@ -80,6 +80,8 @@ class TestQueue extends Command
         $msg = $message->getBody();
         $msg_arr = json_decode($msg, true);
         var_dump($msg_arr);
+
+        return $message->delivery_info['channel']->basic_ack($message->delivery_info['delivery_tag']);
     }
 }
 
