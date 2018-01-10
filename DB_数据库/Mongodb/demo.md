@@ -103,18 +103,23 @@ class UserModel extends Eloquent
 ## 配置
 - \config\database.php
 ```
-'mongodb' => [
-    'driver'   => 'mongodb',
-    'host'     => env('MONGO_DB_HOST', 'localhost'),
-    'port'     => env('MONGO_DB_PORT', 27017),
-    'database' => env('MONGO_DB_DATABASE'),
-    'username' => env('MONGO_DB_USERNAME'),
-    'password' => env('MONGO_DB_PASSWORD'),
-    'options'  => [
-        //'database' => 'admin' // sets the authentication database required by mongo 3
-        //'replicaSet' => 'replicaSetName'
-    ]
-],
+    'connections' => [
+
+        // ...
+
+        'mongodb' => [
+            'driver'   => 'mongodb',
+            'host'     => env('MONGO_DB_HOST', 'localhost'),
+            'port'     => env('MONGO_DB_PORT', 27017),
+            'database' => env('MONGO_DB_DATABASE'),
+            'username' => env('MONGO_DB_USERNAME'),
+            'password' => env('MONGO_DB_PASSWORD'),
+            'options'  => [
+                //'database' => 'admin' // sets the authentication database required by mongo 3
+                //'replicaSet' => 'replicaSetName'
+            ]
+        ],
+    ],
 
 ```
 
@@ -131,7 +136,7 @@ MONGO_DB_PASSWORD=
 
 ##  测试
 ```
-$router->get('/', function () use ($router) {
+Route::get('/', function () {
     $user = app('UserModel');
     $user->name = 'meinvbingyue';
     $flag = $user->save();
@@ -141,6 +146,7 @@ $router->get('/', function () use ($router) {
     $list = $user->get()->toArray();
     dd($list);
 });
+
 
 
 ```
