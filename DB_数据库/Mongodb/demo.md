@@ -1,3 +1,4 @@
+```
 netstat -tunpl | grep 27017	#查看mongo是否启动
 pstree -p | grep mongod
 
@@ -10,61 +11,68 @@ cd /usr/local/mongodb/bin
 >use test;			#使用test数据库
 >show collections;		#查看所有集合
 >db.test.find().pretty();	#查询test集合的数据
+```
 
+----
 
-/*****************************************************************************/
+- 1、composer require jenssegers/mongodb
 
-1、composer require jenssegers/mongodb
+- 2、编辑 config/app.php
+    ```
+    'providers' => [
+    	
+    	//使用模型提供者来绑定所有的模型 -> php artisan make:provider ModelServiceProvider
+            App\Providers\ModelServiceProvider::class,
 
-2、编辑 config/app.php
-
-'providers' => [
-	
-	//使用模型提供者来绑定所有的模型 -> php artisan make:provider ModelServiceProvider
-        App\Providers\ModelServiceProvider::class,
-
-        /*
-         * Mongodb Service Providers
-         */
-        \Jenssegers\Mongodb\MongodbServiceProvider::class,
-    ],
-
-'aliases' => [
-        'Moloquent' => Jenssegers\Mongodb\Eloquent\Model::class,
-    ],
-
-3、编辑 app/Providers/ModelServiceProvider.php
-
-public function register()
-{
-	$this->app->bind('AdminUser',AdminUser::class);
-}
-
-4、编辑 config/database.php
-
-'mongodb' => [
-            'driver'   => 'mongodb',
-            'host'     => env('MONGO_DB_HOST', 'localhost'),
-            'port'     => env('MONGO_DB_PORT', 27017),
-            'database' => env('MONGO_DB_DATABASE', 'mydb'),
-            'username' => env('MONGO_DB_USERNAME', ''),
-            'password' => env('MONGO_DB_PASSWORD', ''),
-            'options'  => [
-                //'replicaSet' => 'replicaSetName'
-            ]
+            /*
+             * Mongodb Service Providers
+             */
+            \Jenssegers\Mongodb\MongodbServiceProvider::class,
         ],
 
-5、编辑 .env
+    'aliases' => [
+            'Moloquent' => Jenssegers\Mongodb\Eloquent\Model::class,
+        ],
+    ```
 
-MONGO_DB_HOST=192.168.11.133
-MONGO_DB_PORT=27017
-MONGO_DB_DATABASE=pph
-MONGO_DB_USERNAME=
-MONGO_DB_PASSWORD=
+- 3、编辑 app/Providers/ModelServiceProvider.php
 
-6、新增模型类
+    ```
+    public function register()
+    {
+    	$this->app->bind('AdminUser',AdminUser::class);
+    }
+    ```
 
-php artisan make:model Models/Admin/AdminUser
+- 4、编辑 config/database.php
+
+    ```
+    'mongodb' => [
+                'driver'   => 'mongodb',
+                'host'     => env('MONGO_DB_HOST', 'localhost'),
+                'port'     => env('MONGO_DB_PORT', 27017),
+                'database' => env('MONGO_DB_DATABASE', 'mydb'),
+                'username' => env('MONGO_DB_USERNAME', ''),
+                'password' => env('MONGO_DB_PASSWORD', ''),
+                'options'  => [
+                    //'replicaSet' => 'replicaSetName'
+                ]
+            ],
+    ```
+
+- 5、编辑 .env
+
+    ```
+    MONGO_DB_HOST=192.168.11.133
+    MONGO_DB_PORT=27017
+    MONGO_DB_DATABASE=pph
+    MONGO_DB_USERNAME=
+    MONGO_DB_PASSWORD=
+    ```
+
+- 6、新增模型类
+    * php artisan make:model Models/Admin/AdminUser
+```php
 
 <?php namespace App\Models\Admin;
 
@@ -93,9 +101,11 @@ class AdminUser extends Moloquent
         return $query->where('_id',$id);
     }
 }
+```
 
-7、测试
+- 7、测试
 
+```php
 /*$admin_user = app('AdminUser');
 $admin_user->username = 'meinvbingyue';
 $admin_user->salt = 'i76D@a';
@@ -123,3 +133,4 @@ dd($list);
 
 $admin_user = app('AdminUser');
 dd($admin_user->all());
+```

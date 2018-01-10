@@ -6,6 +6,7 @@
 # 获取表名
 $table_name = $model->getTable();
 
+app('db')->update( app('db')->raw($update_sql) );
 
 $article = $model->find(1);
 $article->title = $data['title'];

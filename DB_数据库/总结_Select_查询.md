@@ -6,6 +6,8 @@ $users = DB::select('select * from users where id = :id', ['id' => 1]);
 
 $builder = DB::table('articles');
 
+$builder = app('db')->table('users');
+
 $model = app('PermissionsModel');	//PermissionsModel是在ServiceProvider中定义的
 
 /**************************************************
