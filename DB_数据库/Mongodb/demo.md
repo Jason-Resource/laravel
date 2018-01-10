@@ -20,6 +20,35 @@ cd /usr/local/mongodb/bin
 
 - composer require jenssegers/mongodb
  
+##  添加模型
+- \app\UserModel.php
+    * php artisan make:model UserModel
+```php
+<?php
+namespace App;
+
+use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
+use Jenssegers\Mongodb\Eloquent\SoftDeletes;
+
+class UserModel extends Eloquent
+{
+    use SoftDeletes;
+
+    protected $connection = 'mongodb';
+
+    protected $collection = 'users';
+
+    /**
+     * 根据 id 查询
+     */
+    public function scopeIdQuery($query,$id)
+    {
+        return $query->where('_id',$id);
+    }
+}
+
+```
+
 ##  添加模型服务
 - app\Providers\ModelProvider.php
     * php artisan make:provider ModelProvider
@@ -54,43 +83,9 @@ cd /usr/local/mongodb/bin
 
     ```
 
-##  添加模型
-- \app\UserModel.php
-    * php artisan make:model UserModel
-```php
-<?php
-namespace App;
 
-use Jenssegers\Mongodb\Eloquent\Model as Eloquent;
-use Jenssegers\Mongodb\Eloquent\SoftDeletes;
-
-class UserModel extends Eloquent
-{
-    use SoftDeletes;
-
-    protected $connection = 'mongodb';
-
-    protected $collection = 'users';
-
-    /**
-     * 根据 id 查询
-     */
-    public function scopeIdQuery($query,$id)
-    {
-        return $query->where('_id',$id);
-    }
-}
-
-```
 
 ## 加载服务
-- app/Providers/ModelProvider.php
-    ```
-    public function register()
-    {
-        $this->app->bind('UserModel','App\UserModel');
-    }
-    ```
 
 - /config/app.php
     ```
