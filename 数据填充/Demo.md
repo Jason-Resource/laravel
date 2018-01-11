@@ -13,7 +13,7 @@
   ```
 
 - 创建播种者
- * php artisan make:seeder TestSeeder
+  * php artisan make:seeder TestSeeder
  
  ```php
  // \database\seeds\TestSeeder.php
