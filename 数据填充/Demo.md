@@ -104,3 +104,17 @@ php artisan migrate --seed 						#运行所有 seeder 类
 php artisan db:seed 							#运行所有 seeder 类
 php artisan db:seed --class=TestSeeder		#单独运行一个特定的 seeder 类
 ```
+
+```
+  DROP TABLE IF EXISTS `sys_test`;
+  CREATE TABLE `sys_test` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `name` varchar(255) DEFAULT NULL,
+    `email` varchar(255) DEFAULT NULL,
+    `password` varchar(255) DEFAULT NULL,
+    `created_at` timestamp NULL DEFAULT NULL,
+    `updated_at` timestamp NULL DEFAULT NULL,
+    `deleted_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+```
