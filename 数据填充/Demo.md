@@ -1,3 +1,4 @@
+### [相关文档](https://d.laravel-china.org/docs/5.4/seeding)
 ### [Faker库](https://github.com/fzaninotto/Faker)
 
 - <a href="#SQL语句">创建表</a>
