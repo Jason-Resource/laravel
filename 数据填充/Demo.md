@@ -39,7 +39,7 @@
 
    ```
  
- - 修改 /database/seeds/DatabaseSeeder.php
+- 修改 /database/seeds/DatabaseSeeder.php
   ```php
    use Illuminate\Database\Seeder;
 
@@ -60,8 +60,9 @@
 
   ```
  
- - 创建模型工厂
+- 创建模型工厂
   * php artisan make:factory TestFactory
+  
    ```php
 
    use Faker\Generator as Faker;
