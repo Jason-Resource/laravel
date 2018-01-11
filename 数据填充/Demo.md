@@ -93,3 +93,10 @@
    });
 
    ```
+   
+- 执行命令
+```
+php artisan migrate --seed 						#运行所有 seeder 类
+php artisan db:seed 							#运行所有 seeder 类
+php artisan db:seed --class=UserTableSeeder		#单独运行一个特定的 seeder 类
+```
