@@ -1,6 +1,5 @@
 - 创建表
-  
-
+  > *  <a href="#SQL语句">SQL语句</a>
 
 - 创建模型
   * php artisan make:model Test
@@ -105,7 +104,7 @@ php artisan db:seed 							#运行所有 seeder 类
 php artisan db:seed --class=TestSeeder		#单独运行一个特定的 seeder 类
 ```
 
-- 创建表
+<a name="SQL语句"></a>
 ```
   DROP TABLE IF EXISTS `sys_test`;
   CREATE TABLE `sys_test` (
