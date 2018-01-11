@@ -105,6 +105,7 @@ php artisan db:seed 							#运行所有 seeder 类
 php artisan db:seed --class=TestSeeder		#单独运行一个特定的 seeder 类
 ```
 
+- 创建表
 ```
   DROP TABLE IF EXISTS `sys_test`;
   CREATE TABLE `sys_test` (
