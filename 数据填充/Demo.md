@@ -1,5 +1,4 @@
 - 创建表
-  * mongo则不用
   
   ```php
   DROP TABLE IF EXISTS `sys_test`;
