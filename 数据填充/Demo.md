@@ -21,23 +21,26 @@
    // \database\seeds\TestSeeder.php
 
 
-   use Illuminate\Database\Seeder;
+  use Illuminate\Database\Seeder;
 
-   class TestSeeder extends Seeder
-   {
-       /**
-        * Run the database seeds.
-        *
-        * @return void
-        */
-       public function run()
-       {
-           // 创建五条记录
-           factory(\App\Test::class, 5)->create([
-               'name' => 'jason'.rand(),   // 覆盖name字段的值
-           ]);
-       }
-   }
+  class TestSeeder extends Seeder
+  {
+      /**
+       * Run the database seeds.
+       *
+       * @return void
+       */
+      public function run()
+      {
+          // 创建一条记录
+          factory(\App\Test::class)->create();
+
+          // 创建五条记录，并覆盖字段值
+          factory(\App\Test::class, 5)->create([
+              'name' => 'jason'.rand(),   // 覆盖name字段的值
+          ]);
+      }
+  }
 
    ```
  
