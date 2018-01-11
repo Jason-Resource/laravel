@@ -1,5 +1,5 @@
 - 创建表
-  > *  <a href="#SQL语句">SQL语句</a>
+  > *  <a href="#SQL语句">SQL语句</a>
 
 - 创建模型
   * php artisan make:model Test
