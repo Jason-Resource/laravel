@@ -1,6 +1,6 @@
 - 创建表
   * mongo则不用
-  ```sql
+  ```
   DROP TABLE IF EXISTS `sys_test`;
   CREATE TABLE `sys_test` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
