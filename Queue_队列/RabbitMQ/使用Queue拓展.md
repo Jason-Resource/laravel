@@ -178,7 +178,7 @@ class ConsumeStockRealData implements ShouldQueue
 
 - 创建命令
    * app\Console\Commands\Testqueue.php
-```
+```php
 <?php
 
 namespace App\Console\Commands;
@@ -231,5 +231,19 @@ class Testqueue extends Command
 
     }
 }
+
+```
+
+---- 
+```
+生产 
+php artisan test:queue
+ 
+消费 
+php artisan queue:work stock_real --queue=test  // 可以指定用哪个链接、队列
+
+ 
+更新了代码记得使用 queue:restart 来重启
+php artisan queue:restart
 
 ```
