@@ -236,21 +236,20 @@ class Testqueue extends Command
 
 - 或者采用路由推送消息
 
- ```php
- use App\Jobs\ConsumeStockRealData;
+```php
+use App\Jobs\ConsumeStockRealData;
 
- Route::get('/push', function(){
+Route::get('/push', function(){
 
-     //向队列推送数据
-     for ($i=0;$i<100000;$i++) {
-         $data["header"] = ["time"=>time()];
-         $job = (new ConsumeStockRealData($data))->onConnection('stock_real');
-         dispatch($job);
-     }
+    //向队列推送数据
+    for ($i=0;$i<100000;$i++) {
+        $data["header"] = ["time"=>time()];
+        $job = (new ConsumeStockRealData($data))->onConnection('stock_real');
+        dispatch($job);
+    }
 
- });
- 
- ```
+});
+```
  
 ---- 
 ## 执行命令
