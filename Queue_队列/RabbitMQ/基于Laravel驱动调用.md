@@ -235,6 +235,7 @@ class Testqueue extends Command
 ```
 
 - 或者采用路由推送消息
+
  ```php
  use App\Jobs\ConsumeStockRealData;
 
@@ -252,6 +253,8 @@ class Testqueue extends Command
  ```
  
 ---- 
+## 执行命令
+
 ```
 生产 
 php artisan test:queue
