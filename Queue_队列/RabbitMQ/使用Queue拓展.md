@@ -34,7 +34,10 @@ composer require enqueue/amqp-bunny:^0.8
   ```
 
 - 4、配置
- * \config\queue.php
+   * \config\queue.php
+
+
+
  ```
    'stock_real' => [
 
