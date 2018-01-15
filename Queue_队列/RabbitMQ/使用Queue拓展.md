@@ -129,3 +129,107 @@ composer require enqueue/amqp-bunny:^0.8
 
    ],
  ```
+
+- 创建job
+  * \app\Jobs\ConsumeStockRealData.php
+```php
+<?php
+
+namespace App\Jobs;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Log;
+
+class ConsumeStockRealData implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $data;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        // 这里是消费
+        print_r($this->data).PHP_EOL;
+//        Log::info($this->data['name']);
+    }
+}
+
+
+```
+
+- 创建命令
+   * app\Console\Commands\Testqueue.php
+```
+<?php
+
+namespace App\Console\Commands;
+
+use App\Jobs\ConsumeStockRealData;
+use Illuminate\Console\Command;
+
+class Testqueue extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'test:queue';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = '推送数据到队列';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+
+        for ($i=0;$i<1000;$i++) {
+            $arr=[
+                'name'=> 'jason'.rand(1000,9999).'--------',
+            ];
+            print_r($arr);
+            \App\Jobs\ConsumeStockRealData::dispatch($arr)->onConnection('stock_real');
+//            \Illuminate\Support\Facades\Queue::push(new ConsumeStockRealData($arr));
+        }
+
+    }
+}
+
+```
