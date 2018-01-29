@@ -34,3 +34,6 @@ composer create-project --prefer-dist laravel/laravel lar54 "5.4.*"
 ```
 php artisan -V
 ```
+
+- 关系
+![图片说明](https://pan.baidu.com/s/1o94R5Ui)
