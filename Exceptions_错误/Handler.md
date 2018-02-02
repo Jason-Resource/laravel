@@ -53,6 +53,32 @@ class Handler extends ExceptionHandler
                     抱歉！你访问的页面不存在！<br><br>>>>> <a href='/'>返回首页</a>";
             exit();
         }
+        
+        /**
+        if (!$request->ajax()) {
+            // 内部错误 和 接口错误
+            if (($exception instanceof \ErrorException)
+                || ($exception instanceof JsonException && $exception->getCode() == 100001)) {
+
+                return response()->view('wap.errors.500');
+            }
+
+            // 404错误 和 模板错误
+            if (($exception instanceof NotFoundHttpException)) {
+
+                $host = $request->header('host');
+                $referer = $request->header('referer');
+
+                $is_first = true;
+                if ($referer && (strpos($referer, $host) !== false)) {
+                    $is_first = false;
+                }
+
+                return response()->view('wap.errors.404', compact('is_first'));
+            }
+        }
+        */
+        
         //此处用于错误数据的转化
         else if ($exception instanceof JsonException) {
             $err_msg = $exception->getErrorMsg();
