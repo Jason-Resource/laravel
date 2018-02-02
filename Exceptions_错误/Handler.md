@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
             exit();
         }
         
-        /**
+        /*
         if (!$request->ajax()) {
             // 内部错误 和 接口错误
             if (($exception instanceof \ErrorException)
