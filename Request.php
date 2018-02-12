@@ -26,6 +26,18 @@ echo $request->id;//动态属性--->这样获取貌似更快
 
 /******************* 客户端信息 *******************/
 
+// 返回当前页面的地址:http://a.com/platforms
+URL::full();
+url()->full();
+// 返回当前页面的完整路径:http://a.com/platforms
+URL::current();
+url()->current();
+// 返回前一个页面的地址:http://a.com
+URL::previous();
+url()->previous();
+// https://jiahe.com/css/foo.css
+URL::secureAsset('css/foo.css');
+
 $request->server('HTTP_REFERER');//上一个页面，可能为空           $pre_url = url()->previous();
 $request->server('HTTP_USER_AGENT');
 $request->server('REDIRECT_STATUS');
@@ -38,9 +50,15 @@ $request->getHttpHost();
 $request->method();
 $request->ip();
 
+$request->route()->getAction();
 $request->route()->getActionName();
 $request->session()->all();
 $request->cookie();
+
+// 获取请求 Uri: /aa/bb/?c=d
+$request->getRequestUri();
+// 获取 Uri: http://xx.com/aa/bb/?c=d
+$request->getUri();
 
 /******************* 判断 *******************/
 
