@@ -32,7 +32,7 @@ url()->full();
 // 返回当前页面的完整路径:http://a.com/platforms
 URL::current();
 url()->current();
-// 返回前一个页面的地址:http://a.com
+// 获取上一个请求的完整的 URL:http://a.com
 URL::previous();
 url()->previous();
 // https://jiahe.com/css/foo.css
