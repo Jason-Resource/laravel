@@ -113,7 +113,6 @@ class TestCommand extends Command
 - 执行命令
     * php artisan test:command
 ```
-```
 输出结果
 
 888
@@ -123,5 +122,4 @@ Array
     [age] => 30
 )
 
-```
 ```
