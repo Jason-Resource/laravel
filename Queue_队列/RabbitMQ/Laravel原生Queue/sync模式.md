@@ -2,9 +2,9 @@
 
 - 环境变量
   * .env
-  ```
-  QUEUE_DRIVER=sync
-  ```
+```
+QUEUE_DRIVER=sync
+```
 
 - 创建job
   * php artisan make:job QueueJob
