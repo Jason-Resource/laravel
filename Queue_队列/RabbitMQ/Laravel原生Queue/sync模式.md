@@ -1,7 +1,5 @@
 ## 同步模式
 
-----
- 
 - 1、环境变量
   * .env
   ```
@@ -56,7 +54,7 @@ class QueueJob implements ShouldQueue
 ```
 
 - 创建命令
-   * php artisan make:command TestCommand
+  * php artisan make:command TestCommand 
 ```php
 <?php
 
@@ -115,14 +113,4 @@ class TestCommand extends Command
 ---- 
 ## 执行命令
     * php artisan test:command
-```
-输出结果
 
-888
-Array
-(
-    [name] => meinvbingyue
-    [age] => 30
-)
-
-```
