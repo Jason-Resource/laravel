@@ -1,6 +1,6 @@
 ## 同步模式
 
-- 1、环境变量
+- 环境变量
   * .env
   ```
   QUEUE_DRIVER=sync
@@ -110,7 +110,18 @@ class TestCommand extends Command
 
 ```
  
----- 
-## 执行命令
+- 执行命令
     * php artisan test:command
+```
+```
+输出结果
 
+888
+Array
+(
+    [name] => meinvbingyue
+    [age] => 30
+)
+
+```
+```
