@@ -148,7 +148,7 @@ class ConsumeStockRealData implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $data;
+    protected $handle_data;
 
     /**
      * Create a new job instance.
@@ -157,7 +157,7 @@ class ConsumeStockRealData implements ShouldQueue
      */
     public function __construct($data)
     {
-        $this->data = $data;
+        $this->handle_data = $data;
     }
 
     /**
@@ -168,8 +168,8 @@ class ConsumeStockRealData implements ShouldQueue
     public function handle()
     {
         // 这里是消费
-        print_r($this->data).PHP_EOL;
-//        Log::info($this->data['name']);
+        print_r($this->handle_data).PHP_EOL;
+//        Log::info($this->handle_data['name']);
     }
 }
 
