@@ -32,6 +32,10 @@ class Test extends Model
     protected $primaryKey = 'id';
     
     //指定允许批量赋值的字段
+    /*
+        $model->fill($params);
+        $response = $model->save();
+    */
     protected $fillable = [
         'name', 'email', 'password',
     ];
