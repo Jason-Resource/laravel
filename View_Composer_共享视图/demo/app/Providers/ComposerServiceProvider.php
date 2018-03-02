@@ -32,6 +32,11 @@ class ComposerServiceProvider extends ServiceProvider
             //
         });*/
 
+        /*view()->composer(
+            ['profile', 'dashboard'],
+            'App\Http\ViewComposers\MyViewComposer'
+        );*/
+        
         /*View::share('key', 'value');*/
     }
 
