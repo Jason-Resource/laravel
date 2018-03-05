@@ -1,5 +1,7 @@
 # 自己封装类来调用
 
+----
+
 -  引入包
 ```
 composer require php-amqplib/php-amqplib
@@ -7,49 +9,49 @@ composer require php-amqplib/php-amqplib
 
 - 配置环境变量
     * .env
-```
-APP_ENV=local
-APP_DEBUG=true
-APP_KEY=rW0ZJ0YtBt2bPe9B6jacByG4lIMwVBSt
-APP_TIMEZONE=UTC
+    ```
+      APP_ENV=local
+      APP_DEBUG=true
+      APP_KEY=rW0ZJ0YtBt2bPe9B6jacByG4lIMwVBSt
+      APP_TIMEZONE=UTC
 
-TEST_AMQP_HOST=192.168.11.156
-TEST_AMQP_PORT=5672
-TEST_AMQP_USERNAME=admin
-TEST_AMQP_PASSWORD=admin
-```
-
+      TEST_AMQP_HOST=192.168.11.156
+      TEST_AMQP_PORT=5672
+      TEST_AMQP_USERNAME=admin
+      TEST_AMQP_PASSWORD=admin    
+    ```
+    
 - 配置参数
     * /config/rabbitmq.php
-```
-return array(
-    // 测试队列
-    'test' =>  [
-        //ip
-        'host'  =>  env('TEST_AMQP_HOST'),
-        //端口
-        'port'  =>  env('TEST_AMQP_PORT'),
-        //用户名称
-        'username'  =>  env('TEST_AMQP_USERNAME'),
-        //密码
-        'password'  =>  env('TEST_AMQP_PASSWORD'),
-        //虚拟机
-        'vhost'  =>  '/',
-        //交换机类型
-        'exchange_type' =>  'direct',
-        //交换机名称
-        'exchange_name' =>  'amq.direct',
-        //队列名称
-        'queue_name' =>  'test',
-        //路由名称
-        'route_name'    =>  '',
-        //每个客户端最多同时间接收多少消息
-        'qos'   =>  300,
-        //心跳
-        'heartbeat' =>  30,
-    ],
-);
-```
+    ```
+      return array(
+          // 测试队列
+          'test' =>  [
+              //ip
+              'host'  =>  env('TEST_AMQP_HOST'),
+              //端口
+              'port'  =>  env('TEST_AMQP_PORT'),
+              //用户名称
+              'username'  =>  env('TEST_AMQP_USERNAME'),
+              //密码
+              'password'  =>  env('TEST_AMQP_PASSWORD'),
+              //虚拟机
+              'vhost'  =>  '/',
+              //交换机类型
+              'exchange_type' =>  'direct',
+              //交换机名称
+              'exchange_name' =>  'amq.direct',
+              //队列名称
+              'queue_name' =>  'test',
+              //路由名称
+              'route_name'    =>  '',
+              //每个客户端最多同时间接收多少消息
+              'qos'   =>  300,
+              //心跳
+              'heartbeat' =>  30,
+          ],
+      );    
+    ```
 
 - 创建类
     * \app\Http\Common\TestBusinessAmqp.php
