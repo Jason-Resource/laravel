@@ -249,7 +249,7 @@
     ```
 
 - 测试
-   * app\Console\Commands\TestQueueCommand.php
+     * app\Console\Commands\TestQueueCommand.php
       
       ```
       namespace App\Console\Commands;
