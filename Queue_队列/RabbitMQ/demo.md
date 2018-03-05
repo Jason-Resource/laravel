@@ -1,8 +1,6 @@
 # 自己封装类来调用
 
-----
-
--  引入包
+- 引入包
 ```
 composer require php-amqplib/php-amqplib
 ```
