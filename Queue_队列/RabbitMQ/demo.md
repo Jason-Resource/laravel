@@ -8,15 +8,15 @@ composer require php-amqplib/php-amqplib
 - 配置环境变量
     * .env
     ```
-APP_ENV=local
-APP_DEBUG=true
-APP_KEY=rW0ZJ0YtBt2bPe9B6jacByG4lIMwVBSt
-APP_TIMEZONE=UTC
+      APP_ENV=local
+      APP_DEBUG=true
+      APP_KEY=rW0ZJ0YtBt2bPe9B6jacByG4lIMwVBSt
+      APP_TIMEZONE=UTC
 
-TEST_AMQP_HOST=192.168.11.156
-TEST_AMQP_PORT=5672
-TEST_AMQP_USERNAME=admin
-TEST_AMQP_PASSWORD=admin   
+      TEST_AMQP_HOST=192.168.11.156
+      TEST_AMQP_PORT=5672
+      TEST_AMQP_USERNAME=admin
+      TEST_AMQP_PASSWORD=admin   
     ```
     
 - 配置参数
