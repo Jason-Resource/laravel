@@ -1,9 +1,9 @@
 # 自己封装类来调用
 
 - 引入包
-```
-composer require php-amqplib/php-amqplib
-```
+   ```
+   composer require php-amqplib/php-amqplib
+   ```
 
 - 配置环境变量
     * .env
