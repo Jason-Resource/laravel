@@ -58,7 +58,10 @@
   * 在public目录下，创建swagger文件夹
   * git clone git@github.com:swagger-api/swagger-ui.git
   * 将dist下的所有文件，拷贝到swagger文件夹下
-  * 修改index.html
+
+- 修改swagger-ui访问地址
+  * index.html
+  
   ```js
    const ui = SwaggerUIBundle({
     //url: "http://petstore.swagger.io/v2/swagger.json", // 注释掉
