@@ -63,19 +63,6 @@
   * index.html
   
   ```js
-   const ui = SwaggerUIBundle({
-    //url: "http://petstore.swagger.io/v2/swagger.json", // 注释掉
-    url: "/swagger-api", // 访问自定义的路由地址
-    dom_id: '#swagger-ui',
-    deepLinking: true,
-    presets: [
-      SwaggerUIBundle.presets.apis,
-      SwaggerUIStandalonePreset
-    ],
-    plugins: [
-      SwaggerUIBundle.plugins.DownloadUrl
-    ],
-    layout: "StandaloneLayout"
-  }) 
+
   ```
  
