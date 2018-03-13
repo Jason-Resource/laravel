@@ -67,3 +67,48 @@
   url: "/swagger-api",
   ```
  
+- 接口编写
+
+```php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class IndexController extends Controller
+{
+
+    /**
+     * 添加
+     * @SWG\Post(
+     *     path="/backend/admin/add",
+     *     description="添加管理员",
+     *     operationId="backend.admin.add",
+     *     produces={"application/json"},
+     *     consumes={"application/x-www-form-urlencoded"},
+     *     tags={"权限模块"},
+     *     @SWG\Parameter(name="name",description="登录名",type="string",in="formData",required=true),
+     *     @SWG\Parameter(name="realname",description="真实姓名",type="string",in="formData",required=true),
+     *     @SWG\Parameter(name="nickname",description="昵称",type="string",in="formData",required=false),
+     *     @SWG\Parameter(name="password",description="密码",type="string",in="formData",required=true),
+     *     @SWG\Parameter(name="role_id",description="角色ID",type="integer",in="formData",required=true),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="",
+     *     )
+     * )
+     * @author jason
+     * @date 2017-09-22
+     * @param Request         $request
+     * @param AdminBusiness $business
+     * @return array
+     */
+    public function index(Request $request)
+    {
+        return view('admin.index.index');
+    }
+
+}
+
+```
