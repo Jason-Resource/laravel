@@ -1,5 +1,8 @@
-- composer require zircote/swagger-php
-
+- 引入组件
+ ```
+ composer require zircote/swagger-php
+ ```
+ 
 - 创建控制器
   * php artisan make:controller SwaggerController
   ```php
@@ -45,9 +48,31 @@
   }
   
   ```
- 
+
+- 创建路由
+  ```php
+  $router->get('swagger-api', 'SwaggerController@api');
+  ```
+  
 - 构建 swagger-ui
   * 在public目录下，创建swagger文件夹
   * git clone git@github.com:swagger-api/swagger-ui.git
   * 将dist下的所有文件，拷贝到swagger文件夹下
-
+  * 修改index.html
+  ```js
+   const ui = SwaggerUIBundle({
+    //url: "http://petstore.swagger.io/v2/swagger.json", // 注释掉
+    url: "/swagger-api", // 访问自定义的路由地址
+    dom_id: '#swagger-ui',
+    deepLinking: true,
+    presets: [
+      SwaggerUIBundle.presets.apis,
+      SwaggerUIStandalonePreset
+    ],
+    plugins: [
+      SwaggerUIBundle.plugins.DownloadUrl
+    ],
+    layout: "StandaloneLayout"
+  }) 
+  ```
+ 
