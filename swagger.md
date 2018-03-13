@@ -112,3 +112,9 @@ class IndexController extends Controller
 }
 
 ```
+
+- 接口文档访问
+
+```
+http://test.cc/swagger/
+```
