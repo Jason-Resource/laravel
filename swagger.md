@@ -12,11 +12,11 @@
   use Illuminate\Http\Request;
 
   /**
-   * 测试上传
-   * Class SwaggerController
+   * 文档
+   * Class SwaggerController
    * @SWG\Info(
    *      version="1.0",
-   *      title="问股后台接口",
+   *      title="后台接口",
    *      description="按功能模块区分,测试执行可以使用对应的 try it out"
    * )
    */
