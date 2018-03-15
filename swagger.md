@@ -118,3 +118,36 @@ class IndexController extends Controller
 ```
 http://test.cc/swagger/
 ```
+
+----
+
+```
+/**
+     * 广告列表
+     * @SWG\Get(
+     *     path="/backend/ad/list",
+     *     description="返回广告列表",
+     *     operationId="backend.ad.list",
+     *     produces={"application/json"},
+     *     tags={"广告"},
+     *     @SWG\Parameter(name="is_all",description="是否查询全部(默认0),1-全部查询,0-分页查询",type="integer",in="query",required=false),
+     *     @SWG\Parameter( name="page",description="页码",type="integer",in="query",required=false),
+     *     @SWG\Parameter(name="page_size",description="每页数量",type="integer",in="query",required=false),
+     *     @SWG\Parameter(name="keyword",description="关键词",type="string",in="query",required=false),
+     *     @SWG\Parameter(name="position",description="广告位置 app:app首页, pc:pc首页",type="string",in="query",required=false),
+     *     @SWG\Parameter(name="is_show",description="是否显示 yes:显示, no:不显示",type="string",in="query",required=false),
+     *     @SWG\Parameter(name="title",description="标题",type="string",in="query",required=false),
+     *     @SWG\Parameter(name="release_time_start",description="开始日期:YYY-mm-dd HH:ii:ss",type="string",in="query",required=false),
+     *     @SWG\Parameter(name="release_time_end",description="结束日期:YYY-mm-dd HH:ii:ss",type="string",in="query",required=false),
+     *     @SWG\Response(
+     *         response=200,
+     *         description="",
+     *     )
+     * )
+     * @author lhl
+     * @Date 2017-9-18 14:04:28
+     * @param Request $request
+     * @param AdBusiness $ad_business
+     * @return mixed
+     */
+```
