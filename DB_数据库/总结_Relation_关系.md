@@ -1,6 +1,20 @@
 ### 关系图 <http://pan.baidu.com/s/1kVSkMZ9/>
+
 ```php
-<?php
+// 关联里面再关联
+$relation = [
+    'orderMealRuleRelation' => function($query){
+	$query->select(['id','order_meal_rule_id','category_id']);
+
+	$query->with(['relationMealRule'=>function($query){
+	    $query->select(['id','type','number','price']);
+	}]);
+    }
+];
+$info = $this->pool_category_dao->detail($id, $columns, $relation);
+```
+
+```php
 
 $model->select($columns)
 ->with([
