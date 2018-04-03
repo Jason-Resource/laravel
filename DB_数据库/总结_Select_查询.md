@@ -1,5 +1,4 @@
 ```php
-<?php
 
 # 原生查询
 $users = DB::select('select * from users where id = :id', ['id' => 1]);
@@ -159,4 +158,25 @@ $db = app('db');
 $sql = $db->raw('SELECT count(id) as total,id,title,version FROM `stk_information` group by version having total>1');
 $result = $db->select($sql);
 $id_arr = collect($result)->pluck('id');    
+
+
+// 左联
+$builder = app('InvoiceModel')
+    ->select([
+	'invoice.id',
+	'invoice.*',
+	'user_weixin_assessment_vip.id as vip_id',
+	'user_weixin_assessment_vip.serve_id as vip_serve_id',
+	'user_weixin_assessment_vip.sign_contract_date as vip_date',
+    ])
+    ->leftJoin('user_weixin_assessment_vip', function($join) {
+	$join->on('invoice.product_id', '=', 'user_weixin_assessment_vip.serve_id')
+	    ->on('invoice.user_id', '=', 'user_weixin_assessment_vip.weixin_id')
+	    ->where('user_weixin_assessment_vip.sign_contract_date', '!=', '0')
+	    ->whereNull('user_weixin_assessment_vip.deleted_at');
+    })
+;
+$builder->where('invoice.user_id', $condition['user_id']);
+$builder->groupBy('invoice.id');
+$list = $builder->get();
 ```
