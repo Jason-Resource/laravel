@@ -23,7 +23,10 @@ return [
             'database' => env('REDIS_DATABASE', 1),
             'password' => env('REDIS_PASSWORD', null),
             //不超时
-            'read_write_timeout' => '-1'
+            'read_write_timeout' => '-1',
+            'options' => [
+                'prefix' => env('REDIS_PREFIX', ''),
+            ]
         ],
 
         'stock_redis' => [
