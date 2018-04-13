@@ -25,6 +25,11 @@ $affected = DB::update('update users set votes = 100 where name = ?', ['John']);
 #递增/递减
 $article->increment('read_num');
 $article->increment('read_num', 10);
+$article->increment('detail_count', 1, [
+        'use_count'=>DB::raw('use_count + 1'),
+        'start_time' => date('YmdHis'),
+])
+
 
 $article->decrement('read_num');
 $article->decrement('read_num', 10);
