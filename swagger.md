@@ -5,49 +5,49 @@
  
 - 创建控制器
   * php artisan make:controller SwaggerController
-  ```php
+```php
 
-  namespace App\Http\Controllers;
+namespace App\Http\Controllers;
 
-  use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 
-  /**
-   * 文档
-   * Class SwaggerController
-   * @SWG\Info(
-   *      version="1.0",
-   *      title="后台接口",
-   *      description="按功能模块区分,测试执行可以使用对应的 try it out"
-   * )
-   */
-  class SwaggerController extends Controller
-  {
-      public function api()
-      {
-          /*if ( in_array(gethostname(), ["ask_stock_control"]) ) {
-              return "";
-          }*/
-          $swagger = \Swagger\scan(app('path') . '/Http/Controllers');
-          // 在没写 200 响应时添加对应的 200 回应
-          $methods = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch'];
-          foreach ($swagger->paths as &$paths) {
-              foreach ($methods as $method) {
-                  if (!isset($paths->{$method})) {
-                      continue;
-                  }
+/**
+ * 文档
+ * Class SwaggerController
+ * @SWG\Info(
+ *      version="1.0",
+ *      title="后台接口",
+ *      description="按功能模块区分,测试执行可以使用对应的 try it out"
+ * )
+ */
+class SwaggerController extends Controller
+{
+    public function api()
+    {
+        /*if ( in_array(gethostname(), ["ask_stock_control"]) ) {
+            return "";
+        }*/
+        $swagger = \Swagger\scan(app('path') . '/Http/Controllers');
+        // 在没写 200 响应时添加对应的 200 回应
+        $methods = ['get', 'put', 'post', 'delete', 'options', 'head', 'patch'];
+        foreach ($swagger->paths as &$paths) {
+            foreach ($methods as $method) {
+                if (!isset($paths->{$method})) {
+                    continue;
+                }
 
-                  foreach ($paths->{$method}->{'responses'} as &$response) {
-                      if ($response->response == 200) {
-                          $response->description = '当code不为0时，抛出msg的错误信息';
-                      }
-                  }
-              }
-          }
-          return response()->json($swagger);
-      }
-  }
-  
-  ```
+                foreach ($paths->{$method}->{'responses'} as &$response) {
+                    if ($response->response == 200) {
+                        $response->description = '当code不为0时，抛出msg的错误信息';
+                    }
+                }
+            }
+        }
+        return response()->json($swagger);
+    }
+}
+
+```
 
 - 创建路由
   ```php
