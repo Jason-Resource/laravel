@@ -18,8 +18,8 @@ class AppServiceProvider extends ServiceProvider
 
         //分时数据的 redis 链接
         $this->app->singleton('stock_redis',function(){
-            $redis = app('redis')->connection('stock_redis');
-
+            $redis = app('redis')->connection('stock_redis'); // 这个是配置在/config/database.php 下 redis.clusters.stock_redis
+ 
             return $redis;
         });
 
