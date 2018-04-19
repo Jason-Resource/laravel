@@ -37,7 +37,7 @@ return [
         ],
         //集群
         'clusters'    =>  [
-            //股票预警数据库链接
+            //股票预警数据库链接   $redis = app('redis')->connection('stock_warning');
             'stock_warning' => [
                 [
                     'host' => env('STOCK_WARNING_REDIS_HOST', 'localhost'),
