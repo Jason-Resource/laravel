@@ -1,6 +1,17 @@
 ### 关系图 <http://pan.baidu.com/s/1kVSkMZ9/>
 
 ```php
+// 后台列表搜索使用
+        if (isset($condition['search_name'])) {
+            $model->whereHas('relationUser',function($query) use($condition){
+                $query->where('real_name', 'like', '%'.$condition['search_name'].'%');
+            });
+        }
+```
+
+----
+
+```php
 // 关联里面再关联
 $relation = [
     'orderMealRuleRelation' => function($query){
