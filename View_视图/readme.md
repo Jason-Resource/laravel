@@ -56,6 +56,8 @@
 	@include('view.name', ['some' => 'data'])
 	@include('record.item', $record)
 
+	@include('admin/layouts/ueditor')
+	
 	//区域加载
 	@section('css')
 		<link rel="stylesheet" href="{{asset('css/main.css')}}">
