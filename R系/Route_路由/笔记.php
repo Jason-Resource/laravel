@@ -22,6 +22,7 @@ $router = app('router');    #Facade中定义的名称
 
 $route = $router->current();
 
+// 获取当前路由别名
 $name = $router->currentRouteName();
 
 $action = $router->currentRouteAction();
