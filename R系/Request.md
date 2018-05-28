@@ -1,4 +1,4 @@
-<?php
+```php
 use Illuminate\Support\Facades\Request;
 #直接在任意位置即可调用：Request::all()
 
@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 $request = app('request');
 #也可以直接make出来
+
+$sub_domain = url()->getRequest()->sub_domain;
 
 /******************* 压入/出参数 *******************/
 
@@ -118,3 +120,4 @@ Input::old('username');
 // 也可以使用全局函数获取
 old('username');
 
+```
