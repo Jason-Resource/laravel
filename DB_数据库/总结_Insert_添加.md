@@ -4,6 +4,9 @@
 #use Illuminate\Support\Facades\DB;
 
 app('db')->table('users')->insert($data);
+ 
+获取 最新新增ID
+$db->getPdo()->lastInsertId();
 
 ### 单个添加
 1.
