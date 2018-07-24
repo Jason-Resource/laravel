@@ -52,11 +52,13 @@ class SwaggerController extends Controller
 - 创建路由
   ```php
   $router->get('swagger-api', 'SwaggerController@api');
+  ```
   
+  ```php
   // 返回文档接口 （只在本地开发时候才显示）
-    if (config('app.env') == 'local' && config('app.debug') == true) {
-        Route::get('swagger-api', 'SwaggerController@api');
-    }
+  if (config('app.env') == 'local' && config('app.debug') == true) {
+      Route::get('swagger-api', 'SwaggerController@api');
+  }
   ```
   
 - 构建 swagger-ui
