@@ -1,7 +1,8 @@
 - 别名 
 ```php
-
+Route::get('keyword/all','KeywordController@all');     // 放到上面才能覆盖
 Route::resource('keyword', 'KeywordController');
+
 Route::resource('api/article', 'Api\ArticleController',['as'=>'api']);
 
 
