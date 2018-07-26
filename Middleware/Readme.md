@@ -6,6 +6,8 @@
         
         $this->middleware('guest:admin', ['except' => 'logout']);
         
+        $this->middleware('assessment-path-record')->except('getIndex');
+        
         $this->middleware('guest');
         
         
