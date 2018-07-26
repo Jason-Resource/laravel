@@ -15,3 +15,15 @@ $list = $list->transform(function ($item) {
     return $item;
 });
 ```
+
+- handle处理
+```
+$data->map(function ($value) {
+            $value->role;
+        });
+
+$data = $data->transform(function ($item) {
+    $item->role_info = $item->role;
+    return $item;
+});
+```
