@@ -3,6 +3,11 @@ namespace App\Http\Middleware;
 
 use Closure;
 
+/**
+ * 解决跨域问题
+ * Class ExampleMiddleware
+ * @package App\Http\Middleware
+ */
 class CrossDomainMiddleware
 {
     /**
