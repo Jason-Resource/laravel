@@ -1,5 +1,13 @@
 > **注意：** 以下DEMO是2.1版本的用法。
  
+```php
+composer require "maatwebsite/excel:2.1.28"
+Maatwebsite\Excel\ExcelServiceProvider::class,
+'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+php artisan vendor:publish
+```
+----
+
 # 导入
 ```php
 
