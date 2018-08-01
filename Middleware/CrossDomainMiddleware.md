@@ -27,6 +27,7 @@ class CrossDomainMiddleware
                 'Access-Control-Allow-Origin'       => $request->header('origin') ? : '*',
                 'Access-Control-Allow-Credentials'  => 'true',
                 'Access-Control-Allow-Headers'  => 'Content-Type,XFILENAME,XFILECATEGORY,XFILESIZE',
+                'Access-Control-Allow-Methods'  => 'DELETE,PUT,POST,GET',
             ]);
         }
     }
