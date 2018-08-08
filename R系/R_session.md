@@ -116,6 +116,8 @@ Session::forget('key');
 
 request()->session()->forget('key');
 
+
+##### 最好不要用
 request()->session()->flush();
 
 /*
