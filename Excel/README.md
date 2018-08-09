@@ -27,9 +27,18 @@ Excel::create('数据统计', function ($excel) use ($excel_data) {
 
   $excel->sheet('score', function ($sheet) use ($excel_data) {
       $sheet->rows($excel_data);
+      
+      for ($i = 2; $i <= count($excel_data[0]) + 1; $i++) {
+          $sheet->row($i - 1, function ($row) {
+              $row->setAlignment('center');
+              $row->setValignment('center');
+          });
+      }
+                
       $sheet->setWidth(array(
           'A' => 12,
-          'B' => 20
+          'B' => 20,
+          'C' => '100%',
       ));
   });
 
