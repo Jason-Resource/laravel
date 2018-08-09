@@ -30,6 +30,8 @@ Excel::create('数据统计', function ($excel) use ($excel_data) {
       
       for ($i = 2; $i <= count($excel_data[0]) + 1; $i++) {
           $sheet->row($i - 1, function ($row) {
+          
+              // 居中显示
               $row->setAlignment('center');
               $row->setValignment('center');
           });
