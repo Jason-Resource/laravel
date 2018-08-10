@@ -34,6 +34,13 @@ DB::insert('insert into users (id, name) values (?, ?)', [1, 'Dayle']);
 
 DB::insert('insert into users (id, name) values (:id, :name)', ['id' => 1, 'name' => 'Dayle']);
 
+7.
+$condition['is_show'] = 1;
+$condition['is_audit'] = 0;
+$condition['recommend_cycle'] = 5;
+$product_pool = app('PoolModel')->fill($condition);
+$product_pool->save();
+
 ### 批量添加
 1.
 $data = [
