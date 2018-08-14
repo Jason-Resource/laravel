@@ -1,4 +1,8 @@
 ```php
+// 剔除空数据
+$collection = collect([1, 2, 3, null, false, '', 0, []]);
+$collection->filter()->all();
+            
 // 判断集合里是否含有某个数据
 $collect->pluck('code')->contains($value['code']);
 
