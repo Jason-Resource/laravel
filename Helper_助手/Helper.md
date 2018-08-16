@@ -5,6 +5,18 @@ namespace App\Http\Common;
 class Helper
 {
     /**
+     * 提供json格式化输出
+     * @param string $json_data
+     */
+    public static function outputJson($json_data = array()) {
+        @header("Cache-Control: no-cache, must-revalidate");
+        @header("Pragma: no-cache");
+        @header("Content-Type:application/json");      
+        
+        echo @json_encode($json_data);
+    }
+    
+    /**
      * 日志版本号
      * @param $build    boolean 是否创建版本
      * @notice:当为 true 是才生成一个新的版本，否则返回旧的版本号
