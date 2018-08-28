@@ -8,7 +8,7 @@ Route::resource('api/article', 'Api\ArticleController',['as'=>'api']);
 
 $app->post('verify', ['uses'=>'ArticlesMustReadController@verify','as'=>'must_read_verify']);
 
-Route::group(['as' => 'admin::'], function () {
+Route::group(['prefix'=>'admin', 'as' => 'admin::'], function () {
     Route::get('dashboard', ['as' => 'dashboard', function () {
         // 路由被命名为 "admin::dashboard"
     }]);
