@@ -43,7 +43,7 @@ class Test extends Model
     //指定不允许批量赋值的字段
      protected $guarded = [];
 
-    //自动维护时间戳
+    //自动维护时间戳 如果是false 则不会自动插入 created_at 、 updated_at
     public $timestamps = false;
 
     //定制时间戳格式
