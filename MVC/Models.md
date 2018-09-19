@@ -76,6 +76,11 @@ class Test extends Model
      */
     protected $hidden = ['created_at', 'updated_at', 'deleted_at'];
 
+    /**
+     * 不用$model->first_name 这样调用一下，也会执行这个函数 ：getFirstNameAttribute()
+     */
+    protected $appends = ['first_name'];
+    
     /***************************************常用查询条件**************************/
 
     /**
