@@ -27,7 +27,9 @@ $list = $list->transform(function ($item) {
 ```
 $data->map(function ($value) {
             $value->role;
-        });
+            $value->short_created_at = date('m-d H:i', strtotime($value->created_at));
+            $value->short_updated_at = date('m-d H:i', strtotime($value->updated_at));
+});
 
 $data = $data->transform(function ($item) {
     $item->role_info = $item->role;
