@@ -24,7 +24,7 @@ $list = $list->transform(function ($item) {
 ```
 
 - handle处理
-```
+```php
 $data->map(function ($value) {
             $value->role;
             $value->category_name = $value->relCategory->name ?? '-';
@@ -38,3 +38,13 @@ $data = $data->transform(function ($item) {
     return $item;
 });
 ```
+
+- 对比
+```php
+$old_author = $old->pluck('relAuthor.name');
+$new_author = collect($res_author_arr)->pluck('name');
+
+$insert = $new_author->diff($old_author);
+$destroy = $old_author->diff($new_author);
+```
+ 
