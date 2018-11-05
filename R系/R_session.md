@@ -1,27 +1,27 @@
 ## 关于设置session值不进去的原因
 - 看\storage 目录有没有写权限
 - 检查是否在中间件中加载了
-```php
-protected $middleware = [
-    \Illuminate\Session\Middleware\StartSession::class,  // 加载在这里则所有路由都共享session
-];
+    ```php
+    protected $middleware = [
+        \Illuminate\Session\Middleware\StartSession::class,  // 加载在这里则所有路由都共享session
+    ];
 
-/**
- * The application's route middleware groups.
- *
- * @var array
- */
-protected $middlewareGroups = [
-    'web' => [
-        \Illuminate\Session\Middleware\StartSession::class,  // 加载在这里则只有web路由能获取session
-    ],
+    /**
+     * The application's route middleware groups.
+     *
+     * @var array
+     */
+    protected $middlewareGroups = [
+        'web' => [
+            \Illuminate\Session\Middleware\StartSession::class,  // 加载在这里则只有web路由能获取session
+        ],
 
-    'api' => [
-        'throttle:60,1',
-        'bindings',
-    ],
-];
-```
+        'api' => [
+            'throttle:60,1',
+            'bindings',
+        ],
+    ];
+    ```
 - 另外，调试session一定要走完全程，不能dd,exit，不然没过中间件，最后是没有设置进值的。
 
 ---- 
