@@ -1,4 +1,15 @@
-- 别名 
+- 获取链接
+```
+action('Admin\KaotiController@hqPageDetail',[$chapter_id, $key])
+action('Admin\KaotiController@hqPageDetail',['chapter_id'=>$chapter_id,'id'=>$key])
+
+route('admin.article.update', $info['id'])
+route('admin.home')
+```
+
+---
+
+- 别名 
 ```php
 Route::get('keyword/all','KeywordController@all');     // 放到上面才能覆盖
 Route::resource('keyword', 'KeywordController');
