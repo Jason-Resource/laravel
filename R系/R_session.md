@@ -1,5 +1,7 @@
 ## 关于设置session值不进去的原因
 - 看\storage 目录有没有写权限
+- 看\storage\sessions 目录有没有创建，有没有写权限
+- 检查env配置的驱动
 - 检查是否在中间件中加载了
     ```php
     protected $middleware = [
