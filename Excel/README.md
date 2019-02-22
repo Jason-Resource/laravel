@@ -14,108 +14,109 @@ php artisan vendor:publish
 ```
 
 # 导出
+- 这个导出是保存到文件里
 ```php
 // 获取组合调仓记录所有数据
-        $condition = [
-            'combination_id' => $cid,
-            'all' => true,
-        ];
-        $data = $stock_log_dao->index($condition);
+$condition = [
+    'combination_id' => $cid,
+    'all' => true,
+];
+$data = $stock_log_dao->index($condition);
 
-        // 导出文件名
-        $file_name = "组合调仓记录";
+// 导出文件名
+$file_name = "组合调仓记录";
 
-        $cellData = [];
-        // 导出 HEAD
-        $cellData[] = [
-            '操作方向',
-            '股票名称',
-            '价格',
-            '股票数',
-            '资金',
-            '仓位',
-            '操作理由',
-            '时间',
-        ];
+$cellData = [];
+// 导出 HEAD
+$cellData[] = [
+    '操作方向',
+    '股票名称',
+    '价格',
+    '股票数',
+    '资金',
+    '仓位',
+    '操作理由',
+    '时间',
+];
 
-        // 导出数据整理
-        foreach ($data as $key => $value) {
-            // 操作方向
-            switch ($value['status']) {
-                case 0:
-                    $status = '建仓';
-                    break;
-                case 1:
-                    $status = '买入';
-                    break;
-                case 2:
-                    $status = '增仓';
-                    break;
-                case 3:
-                    $status = '减仓';
-                    break;
-                case 4:
-                    $status = '清仓';
-                    break;
-                
-                default:
-                    $status = '-';
-                    break;
-            }
+// 导出数据整理
+foreach ($data as $key => $value) {
+    // 操作方向
+    switch ($value['status']) {
+        case 0:
+            $status = '建仓';
+            break;
+        case 1:
+            $status = '买入';
+            break;
+        case 2:
+            $status = '增仓';
+            break;
+        case 3:
+            $status = '减仓';
+            break;
+        case 4:
+            $status = '清仓';
+            break;
 
-            // 股票名称
-            $stock_name = $value->combinationStocks->name."({$value->combinationStocks->code})";
+        default:
+            $status = '-';
+            break;
+    }
 
-            // 价格
-            if ($value['status']==0 || $value['status']==1 || $value['status']==2) {
-                $price = $value['buy_price'];
-            } else {
-                $price = $value['sell_price'];
-            }
+    // 股票名称
+    $stock_name = $value->combinationStocks->name."({$value->combinationStocks->code})";
 
-            // 股票数
-            $stock_num = intval($value['new_position_number']-$value['old_position_number']);
+    // 价格
+    if ($value['status']==0 || $value['status']==1 || $value['status']==2) {
+        $price = $value['buy_price'];
+    } else {
+        $price = $value['sell_price'];
+    }
 
-            // 资金
-            if ($value['status']==0 || $value['status']==1 || $value['status']==2) {
-                $money = -sprintf("%.2f",abs($value['new_position_number']-$value['old_position_number'])*$value['buy_price']);
-            } else {
-                $money = sprintf("%.2f",abs($value['new_position_number']-$value['old_position_number'])*$value['sell_price']);
-            }
+    // 股票数
+    $stock_num = intval($value['new_position_number']-$value['old_position_number']);
 
-            // 仓位
-            $position = number_format($value['old_position'],2)."%  -> ".number_format($value['new_position'],2)."%";
+    // 资金
+    if ($value['status']==0 || $value['status']==1 || $value['status']==2) {
+        $money = -sprintf("%.2f",abs($value['new_position_number']-$value['old_position_number'])*$value['buy_price']);
+    } else {
+        $money = sprintf("%.2f",abs($value['new_position_number']-$value['old_position_number'])*$value['sell_price']);
+    }
 
-            // 理由
-            $reason = $value['reason'];
+    // 仓位
+    $position = number_format($value['old_position'],2)."%  -> ".number_format($value['new_position'],2)."%";
 
-            // 时间
-            $time = date('Y-m-d H:i:s',strtotime($value['create_time']));
+    // 理由
+    $reason = $value['reason'];
 
-            $cellData[] = [
-                $status,
-                $stock_name,
-                $price,
-                $stock_num,
-                $money,
-                $position,
-                $reason,
-                $time,
-            ];
-        }
+    // 时间
+    $time = date('Y-m-d H:i:s',strtotime($value['create_time']));
 
-        // 导出excel，设置保存位置
-         app('excel')->create('组合调仓记录',function($excel) use ($cellData){
-            $excel->sheet('sheet1', function($sheet) use ($cellData){
+    $cellData[] = [
+        $status,
+        $stock_name,
+        $price,
+        $stock_num,
+        $money,
+        $position,
+        $reason,
+        $time,
+    ];
+}
 
-                $sheet->rows($cellData);
+// 导出excel，设置保存位置
+ app('excel')->create('组合调仓记录',function($excel) use ($cellData){
+    $excel->sheet('sheet1', function($sheet) use ($cellData){
 
-                /*$sheet->setWidth(array(
-                    'A'     =>  20,
-                    'C'     =>  20
-                ));*/
-            });
-        })->store('xls', public_path('uploads'));
+        $sheet->rows($cellData);
+
+        /*$sheet->setWidth(array(
+            'A'     =>  20,
+            'C'     =>  20
+        ));*/
+    });
+})->store('xls', public_path('uploads'));
 ```
 
 ----
