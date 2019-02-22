@@ -13,7 +13,7 @@ php artisan vendor:publish
 导出身份证，前面加个 空格 就能显示全部
 ```
 
-# 导入
+# 导出
 ```php
 
 $excel_data[0] = [
@@ -80,7 +80,7 @@ Excel::create('数据统计', function ($excel) use ($excel_data) {
  
 ----
 
-# 导出
+# 导入
 
 ```php
 $filePath = storage_path('test.xlsx');
