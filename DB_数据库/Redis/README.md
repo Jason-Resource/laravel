@@ -12,6 +12,32 @@
 ],
 ```
 
+- 如果上面前缀不起作用，那就放出来吧
+```
+    'redis' => [
+        'client' => 'predis',
+        'cluster' => false,
+        'options' => [
+            'prefix' => env('REDIS_PREFIX', 'product-centre'),
+        ],
+        'default' => [
+            'host' => env('REDIS_HOST', 'localhost'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 0,
+
+        ],
+        // session 专用
+        'session' => [
+            'host' => env('REDIS_HOST', 'localhost'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 2,
+        ],
+
+    ],
+```
+
 ```
 确保 .env 文件中 CACHE_DRIVER=redis ,更改缓存驱动为Redis
 
