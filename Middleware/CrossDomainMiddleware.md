@@ -1,3 +1,9 @@
+## 如果要传token，注意 Access-Control-Allow-Headers 加一个 TOKEN
+```
+$response->header('Access-Control-Allow-Headers', 'Content-Type,XFILENAME,XFILECATEGORY,XFILESIZE,TOKEN');
+```
+----
+
 ```php
 namespace App\Http\Middleware;
 
