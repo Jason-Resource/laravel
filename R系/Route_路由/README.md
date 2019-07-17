@@ -29,6 +29,14 @@ Route::get('user/profile', 'UserController@showProfile')->name('profile');
 ```
 
 ----
+- 资源路由
+
+```
+Route::resource('speech', 'SpeechController', ['only' => [
+        'store', 'update'
+    ]]);
+```
+----
 
 ```
 class Illuminate\Routing\Route;   #这个可以理解为底层的路由类，所有有关路由的方法都集中在这里
