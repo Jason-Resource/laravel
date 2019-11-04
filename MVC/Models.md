@@ -219,14 +219,22 @@ class Test extends Model
     /***************************************修改器**************************/
     /**
      * 设置用户名字。
+     * 将传入的值全部转为小写
      *
      * @param  string  $value
      * @return void
-     * @example $model->first_name = 'meinvbingyue';
      */
     public function setFirstNameAttribute($value)
     {
         $this->attributes['first_name'] = strtolower($value);
+    }
+    
+    // 如果设置的值为空，则默认为NULL
+    public function setWattBeginAttribute($value)
+    {
+        if (empty($value)) {
+            $this->attributes['watt_begin'] = null;
+        }
     }
 }
 
