@@ -230,10 +230,12 @@ class Test extends Model
     }
     
     // 如果设置的值为空，则默认为NULL
-    public function setWattBeginAttribute($value)
+    public function setThumbAttribute($value)
     {
+        $this->attributes['thumb'] = $value;
+
         if (empty($value)) {
-            $this->attributes['watt_begin'] = null;
+            $this->attributes['thumb'] = null;
         }
     }
 }
